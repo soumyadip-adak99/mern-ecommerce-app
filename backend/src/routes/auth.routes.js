@@ -1,4 +1,9 @@
 import { Router } from "express";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
+import { logoutUser } from "../controllers/auth.controller.js";
 
-const route = Router();
+const router = Router();
 
+router.route("/").post(verifyJwt, logoutUser);
+
+export default router;
