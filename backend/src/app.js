@@ -1,0 +1,18 @@
+import express from "express";
+import cookieParser from "cookie-parser";
+
+const app = express();
+
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.static("public"));
+app.use(cookieParser());
+
+export const BASE_API = "/api/v1";
+
+// routes
+import healthCheckRoute from "./routes/healthCheck.routes.js";
+
+app.use(`${BASE_API}/health-check`, healthCheckRoute);
+
+export { app };
