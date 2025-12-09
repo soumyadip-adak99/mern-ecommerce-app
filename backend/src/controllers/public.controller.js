@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { options } from "../utils/constance.js";
-import { generateToken } from "../utils/generateToken.js";
+import { sendWelcomeEmail } from "../utils/SendEmail.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
@@ -11,10 +11,10 @@ export const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required");
     }
 
-    const exitedUser = await User.findOne({ email });
+    const existedUser = await User.findOne({ email });
 
-    if (exitedUser) {
-        throw new ApiError(409, "User with email already exits.");
+    if (existedUser) {
+        throw new ApiError(409, "User with email already exists.");
     }
 
     const user = await User.create({
@@ -24,15 +24,24 @@ export const registerUser = asyncHandler(async (req, res) => {
         password,
     });
 
-    const createUser = await User.findById(user._id).select("-password -jwtToken");
+    const createdUser = await User.findById(user._id).select("-password -jwtToken");
 
-    if (!createUser) {
+    if (!createdUser) {
         throw new ApiError(500, "Something went wrong on server.");
     }
 
+    let name = `${first_name} ${last_name}`;
+
+    // Ensure email sending doesn't block the response if it fails (optional safety)
+    try {
+        await sendWelcomeEmail(email, name);
+    } catch (error) {
+        console.error("Email sending failed:", error);
+    }
+
     return res.status(200).json({
-        message: "User register successfully",
-        userData: createUser,
+        message: "User registered successfully",
+        userData: createdUser,
     });
 });
 
@@ -57,16 +66,19 @@ export const loginUser = asyncHandler(async (req, res) => {
 
     const jwtToken = user.generateJwtToken();
 
-    // Save token in DB (optional)
+    // Updating the token in DB is optional but okay if that's your logic
     user.jwtToken = jwtToken;
     await user.save({ validateBeforeSave: false });
 
     const loggedUser = await User.findById(user._id).select("-password -jwtToken");
 
-    return res.status(200).cookie("jwt", jwtToken, options).json({
-        status: 200,
-        message: "User login successfully",
-        user: loggedUser,
-        token: jwtToken,
-    });
+    return res
+        .status(200)
+        .cookie("jwtToken", jwtToken, options) // Matches the middleware now
+        .json({
+            status: 200,
+            message: "User login successfully",
+            user: loggedUser,
+            token: jwtToken,
+        });
 });

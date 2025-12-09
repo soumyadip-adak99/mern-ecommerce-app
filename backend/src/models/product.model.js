@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
     {
+        product_name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
         product_description: {
             type: String,
             required: true,
@@ -31,7 +37,7 @@ const productSchema = new mongoose.Schema(
             trim: true,
         },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 export const Product = mongoose.model("Product", productSchema);

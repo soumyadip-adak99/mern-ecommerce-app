@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import healthCheckRoute from "./routes/healthCheck.routes.js";
 import publicRoute from "./routes/public.routes.js";
 import authRoute from "./routes/auth.routes.js";
+import userRoute from "./routes/user.routes.js";
+import adminRoute from "./routes/admin.routes.js";
 
 const app = express();
 
@@ -26,5 +28,11 @@ app.use(`${BASE_API}/public`, publicRoute);
 
 // auth controllers
 app.use(`${BASE_API}/auth`, authRoute);
+
+// user routes
+app.use(`${BASE_API}/user`, userRoute);
+
+// admin routes
+app.use(`${BASE_API}/admin`, adminRoute);
 
 export { app };
