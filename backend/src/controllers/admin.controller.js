@@ -54,7 +54,11 @@ export const addProduct = asyncHandler(async (req, res) => {
     try {
         const { product_name, product_description, price, image, status, category } = req.body;
 
-        if ([product_name, product_description, price, image, category].some((field) => !field || field.trim() === "")) {
+        if (
+            [product_name, product_description, price, image, category].some(
+                (field) => !field || field.trim() === ""
+            )
+        ) {
             return res.status(400).json({
                 status: "BAD_REQUEST",
                 message: "All fields are required",
@@ -114,7 +118,6 @@ export const deleteProduct = asyncHandler(async (req, res) => {
             message: "Product deleted",
             product: product,
         });
-
     } catch (e) {
         console.error(e);
         return res.status(500).json({
@@ -146,9 +149,13 @@ export const updateProduct = asyncHandler(async (req, res) => {
             });
         }
 
-        existingProduct.product_name = product_name?.trim() !== "" ? product_name : existingProduct.product_name;
+        existingProduct.product_name =
+            product_name?.trim() !== "" ? product_name : existingProduct.product_name;
 
-        existingProduct.product_description = product_description?.trim() !== "" ? product_description : existingProduct.product_description;
+        existingProduct.product_description =
+            product_description?.trim() !== ""
+                ? product_description
+                : existingProduct.product_description;
 
         existingProduct.price = price !== undefined && price !== "" ? price : existingProduct.price;
 
@@ -165,7 +172,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
             message: "Product updated successfully",
             updated_product: updatedProduct,
         });
-
     } catch (e) {
         console.error(e);
         return res.status(500).json({
@@ -174,27 +180,3 @@ export const updateProduct = asyncHandler(async (req, res) => {
         });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

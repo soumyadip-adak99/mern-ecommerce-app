@@ -1,78 +1,78 @@
-import {
-    Filter,
-    ChevronDown,
-    Star,
-    ShoppingCart,
-    Heart,
-    X,
-    Home,
-    ChevronRight,
-    SlidersHorizontal,
-} from "lucide-react";
+import { ShoppingCart, Heart, Star } from "lucide-react";
 
-export default function ProductCard({ product }) {
+const ProductCard = ({ product, onAddToCart, onViewDetails }) => {
     return (
-        <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
-            <div className="relative h-56 overflow-hidden bg-gray-100">
+        <div className="bg-white w-full max-w-sm rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 overflow-hidden flex flex-col">
+            {/* Image */}
+            <figure className="relative h-56 bg-gray-100 overflow-hidden">
                 <img
                     src={product.image}
                     alt={product.product_name}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
-                {/* Badges */}
-                <div className="absolute top-3 left-3 flex gap-2">
-                    {product.status === "OUT_OF_STOCK" && (
-                        <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
-                            Sold Out
-                        </span>
-                    )}
-                    {product.status === "COMING_SOON" && (
-                        <span className="bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
-                            Coming Soon
-                        </span>
-                    )}
-                </div>
 
-                {/* Quick Action Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/50 to-transparent">
-                    <button className="w-full bg-white text-gray-900 font-medium py-2 rounded-lg shadow-lg hover:bg-gray-50 flex items-center justify-center gap-2 text-sm">
-                        <ShoppingCart size={16} />
-                        Add to Cart
-                    </button>
-                </div>
-
-                <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-red-500 hover:bg-white transition-colors">
+                {/* Favorite */}
+                <button className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-sm text-gray-500 hover:text-red-500 transition">
                     <Heart size={18} />
                 </button>
-            </div>
 
-            <div className="p-5 flex flex-col flex-grow">
-                <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wide">
+                {/* Status Badge */}
+                {product.status !== "IN_STOCK" && (
+                    <span className="absolute top-3 left-3 bg-red-50 text-red-600 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
+                        {product.status.replace("_", " ")}
+                    </span>
+                )}
+            </figure>
+
+            {/* Body */}
+            <div className="p-4 flex flex-col gap-3 flex-grow">
+                {/* Category + Rating */}
+                <div className="flex justify-between items-center">
+                    <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md font-semibold">
                         {product.category}
                     </span>
-                    <div className="flex items-center gap-1 text-amber-400 text-xs font-medium">
-                        <Star size={12} fill="currentColor" />
-                        <span className="text-gray-500 ml-1">
-                            {product.rating} ({product.reviews})
-                        </span>
+
+                    <div className="flex items-center gap-1">
+                        <Star size={14} className="text-amber-400 fill-amber-400" />
+                        <span className="text-sm font-medium">{product.rating}</span>
+                        <span className="text-xs text-gray-400">({product.reviews})</span>
                     </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">
+                {/* Title */}
+                <h2 className="text-lg font-bold text-gray-900 hover:text-indigo-600 cursor-pointer transition">
                     {product.product_name}
-                </h3>
+                </h2>
 
-                <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">
-                    {product.product_description}
-                </p>
+                {/* Description */}
+                {/* <p className="text-sm text-gray-500 line-clamp-2">{product.product_description}</p> */}
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                    <span className="text-xl font-bold text-gray-900">
-                        ${product.price.toFixed(2)}
-                    </span>
+                {/* Price */}
+                <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
+                    <div>
+                        <span className="text-xs text-gray-400 uppercase">Price</span>
+                        <p className="text-xl font-bold text-gray-900">₹{product.price}</p>
+                    </div>
+
+                    <button
+                        onClick={() => onViewDetails(product)}
+                        className="text-sm font-medium text-indigo-600 hover:underline"
+                    >
+                        View Details
+                    </button>
                 </div>
+
+                {/* Add to Cart */}
+                <button
+                    onClick={() => onAddToCart(product)}
+                    className="w-full mt-2 flex items-center justify-center gap-2 text-sm bg-indigo-600 text-white py-2.5 rounded-lg shadow hover:bg-indigo-700 active:scale-95 transition"
+                >
+                    <ShoppingCart size={18} />
+                    Add to Cart
+                </button>
             </div>
         </div>
     );
-}
+};
+
+export default ProductCard;

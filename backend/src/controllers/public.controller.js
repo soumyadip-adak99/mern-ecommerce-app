@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { options } from "../utils/constance.js";
 import { sendWelcomeEmail } from "../utils/SendEmail.js";
+import { Product } from "../models/product.model.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
@@ -81,4 +82,27 @@ export const loginUser = asyncHandler(async (req, res) => {
             user: loggedUser,
             token: jwtToken,
         });
+});
+
+export const getAllProducts = asyncHandler(async (_, res) => {
+    try {
+        const products = await Product.find();
+
+        if (!products) {
+            return res.status(404).json({
+                status_code: 404,
+                message: "NOT_FOUND",
+            });
+        }
+
+        return res.status(200).json({
+            status_code: 200,
+            products: products,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            status_code: 500,
+            error_message: e.message,
+        });
+    }
 });

@@ -1,22 +1,22 @@
 import mongoose from "mongoose";
 
-const addressSchema = mongoose.Schema(
+const addressSchema = new mongoose.Schema(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            require: true,
+            required: true,
         },
 
         name: {
             type: String,
-            require: true,
+            required: true,
             trim: true,
         },
 
         phone_number: {
             type: String,
-            require: true,
+            required: true,
             match: [/^[6-9]\d{9}$/, "Invalid Indian phone number"],
         },
 
@@ -33,7 +33,7 @@ const addressSchema = mongoose.Schema(
 
         house_no: {
             type: String,
-            require: true,
+            required: true,
             trim: true,
         },
 
@@ -61,9 +61,7 @@ const addressSchema = mongoose.Schema(
             trim: true,
         },
     },
-    {
-        timestamps: true,
-    }
+    { timestamps: true }
 );
 
 export const Address = mongoose.model("Address", addressSchema);
