@@ -14,7 +14,7 @@ import {
 import { productData } from "../tempData";
 import CategoryFilter from "../components/CategoryFilter";
 import ProductCard from "../components/ProductCard";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../sections/Navbar";
 import ProductModal from "../components/ProductModal";
 

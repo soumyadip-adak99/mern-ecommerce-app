@@ -201,3 +201,30 @@ export const createOrder = asyncHandler(async (req, res) => {
         });
     }
 });
+
+export const deleteCartItem = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const product = Product.findByIdAndDelete({ _id: id });
+
+        if (!product) {
+            return res.status(404).json({
+                status: "NOT_FOUND",
+                error_message: "product not found",
+            });
+        }
+
+        return res.status(200).json({
+            status: "SUCCESS",
+            message: "product delete successfully",
+            product: product,
+        });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            status: "INTERNAL_SERVER_ERROR",
+            error_message: e.message,
+        });
+    }
+});

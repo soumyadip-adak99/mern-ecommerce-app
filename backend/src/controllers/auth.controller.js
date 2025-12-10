@@ -10,7 +10,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
         },
         { new: true }
     );
-
+    console.log("logout successfull");
     return res.status(200).clearCookie("jwtToken", options).json({
         status: 200,
         message: "User logout successfully",

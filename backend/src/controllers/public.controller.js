@@ -33,7 +33,6 @@ export const registerUser = asyncHandler(async (req, res) => {
 
     let name = `${first_name} ${last_name}`;
 
-    // Ensure email sending doesn't block the response if it fails (optional safety)
     try {
         await sendWelcomeEmail(email, name);
     } catch (error) {
@@ -67,7 +66,6 @@ export const loginUser = asyncHandler(async (req, res) => {
 
     const jwtToken = user.generateJwtToken();
 
-    // Updating the token in DB is optional but okay if that's your logic
     user.jwtToken = jwtToken;
     await user.save({ validateBeforeSave: false });
 

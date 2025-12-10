@@ -1,4 +1,5 @@
-import { PlayCircle, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
     return (
@@ -33,17 +34,17 @@ export default function Hero() {
                                 sustainable materials and built for the modern urban explorer.
                                 Comfort and quality that truly stand out.
                             </p>
-                            {/* Buttons */}
+
                             <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                                 <div className="rounded-md shadow">
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/products"
                                         className="w-full flex items-center justify-center px-8 py-3 border border-transparent
                                         text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700
                                         md:py-4 md:text-lg transition-all"
                                     >
                                         Shop Collection
-                                    </a>
+                                    </Link>
                                 </div>
                                 {/* <div className="mt-3 sm:mt-0 sm:ml-3">
                                     <a
