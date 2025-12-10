@@ -81,7 +81,7 @@ export default function CategoryFilter({
                         Max Price
                     </h3>
                     <span className="bg-gray-100 text-gray-900 text-xs font-bold px-2 py-1 rounded">
-                        ${maxPrice}
+                        ₹{maxPrice}
                     </span>
                 </div>
 
@@ -96,8 +96,8 @@ export default function CategoryFilter({
                     />
                 </div>
                 <div className="flex justify-between mt-3 text-xs font-medium text-gray-400">
-                    <span>$0</span>
-                    <span>${priceRange.max}+</span>
+                    <span>₹0</span>
+                    <span>₹{priceRange.max}+</span>
                 </div>
             </div>
 

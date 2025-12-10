@@ -245,9 +245,7 @@ function CartPage() {
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-600">
                                     <span>Shipping Estimate</span>
-                                    <span className="font-medium text-gray-900 text-green-600">
-                                        Free
-                                    </span>
+                                    <span className="font-medium  text-green-600">Free</span>
                                 </div>
                                 <div className="border-t border-gray-100 pt-4 mt-4">
                                     <div className="flex justify-between items-end">

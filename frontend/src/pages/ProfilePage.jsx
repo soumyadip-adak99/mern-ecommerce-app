@@ -85,8 +85,6 @@ export default function ProfilePage() {
         dispatch(getUserDetails());
     }, [dispatch]);
 
-    // 2. CRITICAL FIX: Sync formData when user data loads
-    // This ensures the form is populated once getUserDetails completes
     useEffect(() => {
         if (safeUser) {
             setFormData({

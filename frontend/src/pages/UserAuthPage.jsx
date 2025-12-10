@@ -160,7 +160,8 @@ function UserAuthPage() {
                     {isError && (
                         <div className="p-4 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100 flex items-center gap-2 animate-in fade-in">
                             <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
-                            {errorMessage || "Action failed. Please try again."}
+                            {"Email and Password is incorrect" ||
+                                "Action failed. Please try again."}
                         </div>
                     )}
                     {isSuccess && (

@@ -25,7 +25,7 @@ const ProductCard = ({ product, onAddToCart, onViewDetails }) => {
             </figure>
 
             {/* Body */}
-            <div className="p-4 flex flex-col gap-3 flex-grow">
+            <div className="p-4 flex flex-col gap-3 grow">
                 {/* Category + Rating */}
                 <div className="flex justify-between items-center">
                     <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md font-semibold">

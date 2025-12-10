@@ -57,7 +57,6 @@ export default function Hero() {
                                     </a>
                                 </div> */}
                             </div>
-                            {/* Social Proof Section */}
                             <div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-500">
                                 {/* User Avatars */}
                                 <div className="flex -space-x-2 overflow-hidden">

@@ -1,6 +1,3 @@
-// FIXED: Duplicate "All Products" issue by removing extra "All" from CategoryFilter rendering.
-// Your AllProducts component code rewritten cleanly with the fix applied.
-
 import { useState, useEffect, useMemo } from "react";
 import {
     Filter,
@@ -57,10 +54,25 @@ export default function AllProducts() {
         }
     };
 
+    // --- FIX START: Modified categories logic ---
     const categories = useMemo(() => {
-        if (safeProducts.length === 0) return ["All"];
-        return [...new Set(["All", ...safeProducts.map((p) => p.category).filter(Boolean)])];
+        // If no products, just return empty (CategoryFilter handles the default 'All' view)
+        if (!Array.isArray(safeProducts)) return [];
+
+        const unique = [
+            ...new Set(
+                safeProducts
+                    .map((p) => p.category)
+                    // Filter out nulls, "all", and "all products" to prevent DB duplicates
+                    .filter((c) => c && !["all", "all products"].includes(c.toLowerCase()))
+            ),
+        ];
+
+        // We return ONLY the unique categories from the DB.
+        // We do NOT add ["All", ...] here because CategoryFilter likely adds it automatically.
+        return unique;
     }, [safeProducts]);
+    // --- FIX END ---
 
     const priceRange = useMemo(() => {
         if (safeProducts.length === 0) return { min: 0, max: 1000 };

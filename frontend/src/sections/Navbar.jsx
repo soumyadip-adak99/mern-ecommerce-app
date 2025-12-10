@@ -69,7 +69,8 @@ export default function Navbar() {
         dispatch(logoutUser());
         setIsProfileOpen(false);
         setIsMobileMenuOpen(false);
-        navigate("/auth/user");
+        // window.location.reload();
+        navigate(0);
     };
 
     const getLinkClass = (path) => {
