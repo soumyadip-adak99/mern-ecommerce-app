@@ -1,5 +1,7 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { productData } from "../tempData";
+import { getAllProducts } from "../features/product/ProductAction";
 
 const getStatusBadge = (status) => {
     switch (status) {
@@ -28,25 +30,40 @@ const getStatusBadge = (status) => {
 
 function ProductSection() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { products, isLoading, isError } = useSelector((state) => state.product);
+
+    useEffect(() => {
+        dispatch(getAllProducts());
+    }, [dispatch]);
 
     return (
-        <div className="bg-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center uppercase">
                     Featured Products
                 </h2>
 
+                {isLoading && (
+                    <p className="text-center text-gray-700 text-lg">Loading products...</p>
+                )}
+
+                {isError && (
+                    <p className="text-center text-red-500 text-lg">Failed to load products</p>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {productData.map((product) => (
+                    {products?.map((product) => (
                         <div
-                            key={product.id}
+                            key={product._id}
                             className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col"
                         >
                             <div className="relative h-48 overflow-hidden group">
                                 <img
                                     src={product.image}
                                     alt={product.product_name}
-                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                                    className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-300"
                                 />
                                 <div className="absolute top-2 right-2">
                                     {getStatusBadge(product.status)}

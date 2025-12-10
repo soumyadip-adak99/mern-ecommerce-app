@@ -1,14 +1,14 @@
-import { ShoppingCart, Heart, Star } from "lucide-react";
+import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 
 const ProductCard = ({ product, onAddToCart, onViewDetails }) => {
     return (
-        <div className="bg-white w-full max-w-sm rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 overflow-hidden flex flex-col">
+        <div className="bg-white w-full max-w-sm rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-200 overflow-hidden flex flex-col">
             {/* Image */}
             <figure className="relative h-56 bg-gray-100 overflow-hidden">
                 <img
                     src={product.image}
                     alt={product.product_name}
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-700 hover:scale-105"
                 />
 
                 {/* Favorite */}
@@ -25,7 +25,7 @@ const ProductCard = ({ product, onAddToCart, onViewDetails }) => {
             </figure>
 
             {/* Body */}
-            <div className="p-4 flex flex-col gap-3 flex-grow">
+            <div className="p-4 flex flex-col gap-3 grow">
                 {/* Category + Rating */}
                 <div className="flex justify-between items-center">
                     <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md font-semibold">
@@ -40,36 +40,39 @@ const ProductCard = ({ product, onAddToCart, onViewDetails }) => {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-lg font-bold text-gray-900 hover:text-indigo-600 cursor-pointer transition">
+                <h2
+                    onClick={() => onViewDetails(product)}
+                    className="text-lg font-bold text-gray-900 hover:text-indigo-600 cursor-pointer transition"
+                >
                     {product.product_name}
                 </h2>
 
-                {/* Description */}
-                {/* <p className="text-sm text-gray-500 line-clamp-2">{product.product_description}</p> */}
-
-                {/* Price */}
-                <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
-                    <div>
-                        <span className="text-xs text-gray-400 uppercase">Price</span>
-                        <p className="text-xl font-bold text-gray-900">₹{product.price}</p>
-                    </div>
-
-                    <button
-                        onClick={() => onViewDetails(product)}
-                        className="text-sm font-medium text-indigo-600 hover:underline"
-                    >
-                        View Details
-                    </button>
+                {/* Price Section */}
+                <div className="mt-auto pt-2 border-t border-gray-100">
+                    <span className="text-xs text-gray-400 uppercase">Price</span>
+                    <p className="text-xl font-bold text-gray-900">₹{product.price}</p>
                 </div>
 
-                {/* Add to Cart */}
-                <button
-                    onClick={() => onAddToCart(product)}
-                    className="w-full mt-2 flex items-center justify-center gap-2 text-sm bg-indigo-600 text-white py-2.5 rounded-lg shadow hover:bg-indigo-700 active:scale-95 transition"
-                >
-                    <ShoppingCart size={18} />
-                    Add to Cart
-                </button>
+                {/* Buttons: Side by Side */}
+                <div className="flex gap-2 mt-1">
+                    {/* Add to Cart Button */}
+                    <button
+                        onClick={() => onAddToCart(product)}
+                        className="flex-1 flex items-center justify-center gap-2 text-sm font-medium bg-indigo-50 text-indigo-700 py-2.5 rounded-lg hover:bg-indigo-100 active:scale-95 transition border border-indigo-100"
+                    >
+                        <ShoppingCart size={18} />
+                        Add
+                    </button>
+
+                    {/* View & Buy Button */}
+                    <button
+                        onClick={() => onViewDetails(product)}
+                        className="flex-1 flex items-center justify-center gap-2 text-sm font-medium bg-indigo-600 text-white py-2.5 rounded-lg shadow-sm hover:bg-indigo-700 active:scale-95 transition"
+                    >
+                        <Eye size={18} />
+                        View & Buy
+                    </button>
+                </div>
             </div>
         </div>
     );

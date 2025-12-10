@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { X, ShoppingCart, Star, Truck, ShieldCheck, Minus, Plus, CreditCard } from "lucide-react";
+import { X, Star, Truck, ShieldCheck, Minus, Plus, CreditCard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductModal({ product, onClose }) {
     const [quantity, setQuantity] = useState(1);
     const [isVisible, setIsVisible] = useState(false);
+
+    const navigate = useNavigate();
 
     // Handle Entry Animation & Body Scroll Lock
     useEffect(() => {
@@ -32,15 +35,16 @@ export default function ProductModal({ product, onClose }) {
     if (!product) return null;
 
     const formatPrice = (price) => {
-        return new Intl.NumberFormat("en-US", {
+        return new Intl.NumberFormat("en-IN", {
             style: "currency",
-            currency: "USD",
+            currency: "INR",
+            maximumFractionDigits: 0,
         }).format(price);
     };
 
     return (
         <div
-            className={`fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
+            className={`fixed inset-0 z-999 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
                 isVisible ? "visible" : "invisible"
             }`}
         >
@@ -73,8 +77,8 @@ export default function ProductModal({ product, onClose }) {
                     />
                 </button>
 
-                {/* Left Side: Product Image Area (Fixed height on mobile, full height on desktop) */}
-                <div className="w-full md:w-1/2 h-64 md:h-auto bg-gray-50 relative flex-shrink-0 group select-none flex items-center justify-center p-6 lg:p-12">
+                {/* Left Side: Product Image Area */}
+                <div className="w-full md:w-1/2 h-64 md:h-auto bg-gray-50 relative shrink-0 group select-none flex items-center justify-center p-6 lg:p-12">
                     <img
                         src={product.image}
                         alt={product.product_name}
@@ -99,7 +103,7 @@ export default function ProductModal({ product, onClose }) {
                     )}
                 </div>
 
-                {/* Right Side: Details & Actions (Scrollable) */}
+                {/* Right Side: Details & Actions */}
                 <div className="w-full md:w-1/2 flex flex-col bg-white h-full overflow-hidden">
                     {/* Scrollable Content */}
                     <div className="flex-1 overflow-y-auto p-5 sm:p-8 lg:p-10 custom-scrollbar">
@@ -142,10 +146,10 @@ export default function ProductModal({ product, onClose }) {
                             </p>
                         </div>
 
-                        {/* Trust Indicators (Stack on very small screens) */}
+                        {/* Trust Indicators */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                                <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 flex-shrink-0">
+                                <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 shrink-0">
                                     <Truck size={18} />
                                 </div>
                                 <div>
@@ -154,7 +158,7 @@ export default function ProductModal({ product, onClose }) {
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                                <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 flex-shrink-0">
+                                <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 shrink-0">
                                     <ShieldCheck size={18} />
                                 </div>
                                 <div>
@@ -167,7 +171,7 @@ export default function ProductModal({ product, onClose }) {
                         </div>
                     </div>
 
-                    {/* Footer Actions (Sticky bottom on mobile inside the content area) */}
+                    {/* Footer Actions */}
                     <div className="p-5 sm:p-8 bg-white border-t border-gray-100 mt-auto">
                         {/* Quantity Selector */}
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
@@ -192,16 +196,12 @@ export default function ProductModal({ product, onClose }) {
                             </div>
                         </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3">
-                            <button className="flex-1 bg-white border border-gray-200 text-gray-700 font-bold py-3.5 px-4 rounded-xl hover:bg-gray-50 hover:border-gray-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group">
-                                <ShoppingCart
-                                    size={20}
-                                    className="text-gray-500 group-hover:text-indigo-600 transition-colors"
-                                />
-                                <span>Add to Cart</span>
-                            </button>
-                            <button className="flex-[1.5] bg-indigo-600 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                        {/* Action Buttons - FIXED: Removed Add to Cart, Buy Now is full width */}
+                        <div className="w-full">
+                            <button
+                                onClick={() => navigate(`/buy-product/${product?._id}`)}
+                                className="w-full bg-indigo-600 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            >
                                 <CreditCard size={20} />
                                 <span>Buy Now</span>
                             </button>

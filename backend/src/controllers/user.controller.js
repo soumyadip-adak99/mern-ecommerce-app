@@ -42,7 +42,7 @@ export const getUserDetails = asyncHandler(async (req, res) => {
     }
 });
 
-export const addToCard = asyncHandler(async (req, res) => {
+export const addToCart = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params;
         const userEmail = getLoggedUser(req);
@@ -87,6 +87,7 @@ export const addToCard = asyncHandler(async (req, res) => {
 
 export const addAddress = asyncHandler(async (req, res) => {
     try {
+        console.log("enter");
         let {
             name,
             phone_number,
@@ -137,6 +138,7 @@ export const addAddress = asyncHandler(async (req, res) => {
             address: address,
         });
     } catch (e) {
+        console.log(e.message);
         return res.status(500).json({
             status: 500,
             error_message: e.message,
@@ -189,6 +191,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         existsUser.orders.push(product._id);
         await existsUser.save();
 
+        console.log("done");
         return res.status(201).json({
             status_code: 201,
             message: "Order placed successfully!",

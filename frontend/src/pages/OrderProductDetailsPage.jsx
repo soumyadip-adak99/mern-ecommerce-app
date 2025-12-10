@@ -74,9 +74,9 @@ export default function OrderProductDetailsPage() {
         return (
             <div className="w-full py-6">
                 <div className="relative flex items-center justify-between w-full">
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-0 rounded-full"></div>
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 z-0 rounded-full"></div>
                     <div
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-indigo-600 transition-all duration-500 -z-0 rounded-full"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-indigo-600 transition-all duration-500 z-0 rounded-full"
                         style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
                     ></div>
 
@@ -114,8 +114,8 @@ export default function OrderProductDetailsPage() {
         <div className="min-h-screen bg-gray-50/50 font-sans pb-20">
             {/* Header Background */}
             <div className="bg-indigo-600 h-64 w-full relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-violet-800 opacity-90" />
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-indigo-600 to-violet-800 opacity-90" />
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[16px_16px]"></div>
             </div>
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-52 relative z-10">
@@ -180,7 +180,7 @@ export default function OrderProductDetailsPage() {
                             <div className="p-6">
                                 <div className="flex items-start gap-5">
                                     {/* Product Image */}
-                                    <div className="h-24 w-24 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
+                                    <div className="h-24 w-24 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0">
                                         {order.image ? (
                                             <img
                                                 src={order.image}
@@ -268,15 +268,15 @@ export default function OrderProductDetailsPage() {
                                             {shippingAddress.name ||
                                                 `${safeUser.first_name} ${safeUser.last_name}`}
                                         </p>
-                                        {/* Maps to: "2903478, Radhamoni" */}
+
                                         <p>
                                             {shippingAddress.house_no}, {shippingAddress.landmark}
                                         </p>
-                                        {/* Maps to: "Tamluk, Tamluk" */}
+
                                         <p>
                                             {shippingAddress.area}, {shippingAddress.city}
                                         </p>
-                                        {/* Maps to: "WB - 721627" */}
+
                                         <p>
                                             {shippingAddress.state} - {shippingAddress.pin_code}
                                         </p>
