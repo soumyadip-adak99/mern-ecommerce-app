@@ -42,7 +42,7 @@ export const getUserDetails = asyncHandler(async (req, res) => {
     }
 });
 
-export const addToCard = asyncHandler(async (req, res) => {
+export const addToCart = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params;
         const userEmail = getLoggedUser(req);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
     ShoppingCart,
     Search,
@@ -10,15 +10,19 @@ import {
     X,
     List,
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../features/appFeatures/authSlice";
+import { logoutUser, getUserDetails } from "../features/appFeatures/authSlice";
 
 import CartItemsModal from "../components/CartItemsModal";
 
 export default function Navbar() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get User from Redux
     const { user } = useSelector((state) => state.auth);
 
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -26,12 +30,11 @@ export default function Navbar() {
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const location = useLocation();
-
     const cartRef = useRef(null);
     const profileRef = useRef(null);
     const mobileMenuRef = useRef(null);
 
+    // --- 1. Handle Click Outside ---
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (cartRef.current && !cartRef.current.contains(e.target)) setIsCartOpen(false);
@@ -50,10 +53,23 @@ export default function Navbar() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    useEffect(() => {
+        dispatch(getUserDetails());
+    }, [dispatch, user?._id]);
+
+    const finalCartItems = useMemo(() => {
+        return user?.cart_items || [];
+    }, [user]);
+
+    const totalPrice = useMemo(() => {
+        return finalCartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+    }, [finalCartItems]);
+
     const handleLogout = () => {
         dispatch(logoutUser());
         setIsProfileOpen(false);
         setIsMobileMenuOpen(false);
+        navigate("/auth/user");
     };
 
     const getLinkClass = (path) => {
@@ -64,13 +80,6 @@ export default function Navbar() {
                 : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
         }`;
     };
-
-    const userCartItems = JSON.parse(localStorage.getItem("cart_item")) || [];
-
-    const totalPrice = userCartItems.reduce(
-        (sum, item) => sum + item.price * (item.quantity || 1),
-        0
-    );
 
     return (
         <>
@@ -108,12 +117,12 @@ export default function Navbar() {
                             </Link>
 
                             {/* Desktop Search Bar */}
-                            <div className="hidden sm:flex items-center bg-gray-100 rounded-full px-4 py-1.5 border border-transparent focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition-all w-48 lg:w-64">
-                                <Search size={18} className="text-gray-400" />
+                            <div className="hidden sm:flex items-center bg-gray-200 rounded-full px-4 py-1.5 border border-transparent focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition-all w-48 lg:w-64">
+                                <Search size={18} className="text-gray-700" />
                                 <input
                                     type="text"
                                     placeholder="Search..."
-                                    className="bg-transparent border-none text-sm ml-2 w-full focus:outline-none placeholder-gray-400 text-gray-700"
+                                    className="bg-transparent border-none text-sm ml-2 w-full focus:outline-none placeholder-gray-700 text-gray-700"
                                 />
                             </div>
 
@@ -125,31 +134,31 @@ export default function Navbar() {
                                 <Search size={22} />
                             </button>
 
-                            {/* Cart - Only show if user is logged in */}
-                            {user && (
-                                <div ref={cartRef} className="relative">
-                                    <button
-                                        onClick={() => setIsCartOpen(!isCartOpen)}
-                                        className={`p-2 rounded-full relative transition-colors ${
-                                            isCartOpen
-                                                ? "bg-indigo-50 text-indigo-600"
-                                                : "text-gray-600 hover:bg-gray-100"
-                                        }`}
-                                    >
-                                        <ShoppingCart size={22} />
+                            {/* --- CART ICON --- */}
+                            <div ref={cartRef} className="relative">
+                                <button
+                                    onClick={() => setIsCartOpen(!isCartOpen)}
+                                    className={`p-2 rounded-full relative transition-colors ${
+                                        isCartOpen
+                                            ? "bg-indigo-50 text-indigo-600"
+                                            : "text-gray-600 hover:bg-gray-100"
+                                    }`}
+                                >
+                                    <ShoppingCart size={26} />
+                                    {finalCartItems.length > 0 && (
                                         <span className="absolute top-0.5 right-0.5 h-4 w-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm ring-2 ring-white">
-                                            {userCartItems.length}
+                                            {finalCartItems.length}
                                         </span>
-                                    </button>
-
-                                    {isCartOpen && (
-                                        <CartItemsModal
-                                            userCartItems={userCartItems}
-                                            totalPrice={totalPrice}
-                                        />
                                     )}
-                                </div>
-                            )}
+                                </button>
+
+                                {isCartOpen && (
+                                    <CartItemsModal
+                                        userCartItems={finalCartItems}
+                                        totalPrice={totalPrice}
+                                    />
+                                )}
+                            </div>
 
                             {user ? (
                                 /* LOGGED IN: SHOW PROFILE DROPDOWN */
@@ -162,11 +171,12 @@ export default function Navbar() {
                                                 : "hover:border-indigo-300"
                                         }`}
                                     >
-                                        <img
-                                            className="h-8 w-8 rounded-full object-cover"
-                                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80"
-                                            alt="Profile"
-                                        />
+                                        <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-sm uppercase">
+                                            {(user?.first_name || "")
+                                                .trim()
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </div>
                                     </button>
 
                                     {isProfileOpen && (
@@ -249,6 +259,7 @@ export default function Navbar() {
                     </div>
                 </div>
 
+                {/* --- MOBILE SEARCH --- */}
                 <div
                     className={`sm:hidden overflow-hidden transition-all duration-300 ease-in-out border-b border-gray-100 bg-gray-50 ${
                         isMobileSearchOpen ? "max-h-16 opacity-100" : "max-h-0 opacity-0"

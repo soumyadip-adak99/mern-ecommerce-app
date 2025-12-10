@@ -1,3 +1,4 @@
+import React from "react";
 import { ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,20 +33,28 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
                     <div className="divide-y divide-gray-50">
                         {userCartItems.map((item) => (
                             <div
-                                key={item._id}
+                                key={item._id || Math.random()}
                                 className="flex items-center gap-4 p-4 hover:bg-gray-50/80 transition-colors group"
                             >
-                                {/* Image Placeholder (replace with <img src={item.image} /> if available) */}
-                                <div className="h-12 w-12 shrink-0 rounded-lg bg-gray-300 border border-gray-400 flex items-center justify-center text-gray-900 group-hover:border-indigo-200 transition-colors">
-                                    <ShoppingBag size={18} />
+                                {/* Image Placeholder */}
+                                <div className="h-12 w-12 shrink-0 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-indigo-200 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                                    {item.image ? (
+                                        <img
+                                            src={item.image}
+                                            alt={item.product_name}
+                                            className="h-full w-full object-cover rounded-lg"
+                                        />
+                                    ) : (
+                                        <ShoppingBag size={18} />
+                                    )}
                                 </div>
 
                                 {/* Product Details */}
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-sm font-medium text-gray-900 truncate group-hover:text-indigo-600 transition-colors">
-                                        {item.name}
+                                        {item.product_name || item.name || "Product"}
                                     </h4>
-                                    <p className="text-xs text-gray-800 mt-0.5">
+                                    <p className="text-xs text-gray-500 mt-0.5">
                                         Qty:{" "}
                                         <span className="font-medium text-gray-700">
                                             {item.quantity || 1}
@@ -56,7 +65,7 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
                                 {/* Price */}
                                 <div className="text-right">
                                     <p className="text-sm font-bold text-gray-900">
-                                        ₹{item.price.toLocaleString()}
+                                        ₹{(item.price || 0).toLocaleString()}
                                     </p>
                                 </div>
                             </div>

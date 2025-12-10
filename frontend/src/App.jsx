@@ -9,7 +9,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import ProfilePage from "./pages/ProfilePage";
 import OrderProductDetailsPage from "./pages/OrderProductDetailsPage";
-import ProductBuyPage from "./pages/ProductBuyPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import SuccessOrderPage from "./pages/SuccessOrderPage";
 
 function App() {
     return (
@@ -59,12 +60,20 @@ function App() {
                     path="/buy-product/:id"
                     element={
                         <ProtectedRoute>
-                            <ProductBuyPage />
+                            <CheckoutPage />
                         </ProtectedRoute>
                     }
                 />
 
-                {/* 404 Page */}
+                <Route
+                    path="/product-checkout/success/:id"
+                    element={
+                        <ProtectedRoute>
+                            <SuccessOrderPage />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>

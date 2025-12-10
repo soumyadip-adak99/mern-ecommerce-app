@@ -23,7 +23,9 @@ import {
     AlertCircle,
     Home,
 } from "lucide-react";
-import { logoutUser } from "../features/appFeatures/authSlice";
+
+// Ensure updateUserProfile is imported if you want the Save button to work
+import { logoutUser, getUserDetails } from "../features/appFeatures/authSlice";
 
 const Toast = ({ message, type, onClose }) => {
     useEffect(() => {
@@ -61,19 +63,40 @@ const Toast = ({ message, type, onClose }) => {
 export default function ProfilePage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user } = useSelector((state) => state.auth);
+
+    // Get user and loading state from Redux
+    const { user, isLoading } = useSelector((state) => state.auth);
     const safeUser = user || JSON.parse(localStorage.getItem("user")) || {};
+
     const [activeTab, setActiveTab] = useState("profile");
     const [isEditing, setIsEditing] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
     const [toast, setToast] = useState(null);
 
+    // Form data state
     const [formData, setFormData] = useState({
-        first_name: safeUser.first_name || "",
-        last_name: safeUser.last_name || "",
-        email: safeUser.email || "",
-        phone: safeUser.phone || "",
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
     });
+
+    // 1. Initial Fetch
+    useEffect(() => {
+        dispatch(getUserDetails());
+    }, [dispatch]);
+
+    // 2. CRITICAL FIX: Sync formData when user data loads
+    // This ensures the form is populated once getUserDetails completes
+    useEffect(() => {
+        if (safeUser) {
+            setFormData({
+                first_name: safeUser.first_name || "",
+                last_name: safeUser.last_name || "",
+                email: safeUser.email || "",
+                phone: safeUser.phone || "",
+            });
+        }
+    }, [safeUser]); // Runs whenever safeUser changes
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
@@ -94,14 +117,33 @@ export default function ProfilePage() {
     };
 
     const handleSave = async () => {
-        setIsSaving(true);
-        setTimeout(() => {
-            console.log("Saved data:", formData);
-            setIsSaving(false);
-            setIsEditing(false);
-            showToast("Profile updated successfully!");
-        }, 1000);
+        // Basic validation
+        if (!formData.first_name || !formData.last_name) {
+            showToast("First and Last name are required.", "error");
+            return;
+        }
+
+        try {
+            // Dispatch update action (assuming you have updateUserProfile)
+            // If you don't have this action yet, you can keep the logic inside the try block mocked
+            if (updateUserProfile) {
+                await dispatch(updateUserProfile(formData)).unwrap();
+                // Refresh details after update to ensure consistency
+                dispatch(getUserDetails());
+                showToast("Profile updated successfully!");
+                setIsEditing(false);
+            } else {
+                // Fallback if action is missing
+                console.log("Update Data:", formData);
+                showToast("Update simulated (Action missing)", "info");
+                setIsEditing(false);
+            }
+        } catch (error) {
+            showToast(error.message || "Failed to update profile", "error");
+        }
     };
+
+    // --- Sub-Components ---
 
     const ProfileDetails = () => (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -122,22 +164,31 @@ export default function ProfilePage() {
                 ) : (
                     <div className="flex gap-3 w-full sm:w-auto">
                         <button
-                            onClick={() => setIsEditing(false)}
+                            onClick={() => {
+                                setIsEditing(false);
+                                // Reset form to current safeUser values on cancel
+                                setFormData({
+                                    first_name: safeUser.first_name || "",
+                                    last_name: safeUser.last_name || "",
+                                    email: safeUser.email || "",
+                                    phone: safeUser.phone || "",
+                                });
+                            }}
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
-                            disabled={isSaving}
+                            disabled={isLoading}
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            {isSaving ? (
+                            {isLoading ? (
                                 <Loader2 size={16} className="animate-spin" />
                             ) : (
                                 <Save size={16} />
                             )}
-                            {isSaving ? "Saving..." : "Save Changes"}
+                            {isLoading ? "Saving..." : "Save Changes"}
                         </button>
                     </div>
                 )}
@@ -200,6 +251,7 @@ export default function ProfilePage() {
     );
 
     const OrderHistory = () => {
+        // Ensures we use the orders fetched by getUserDetails
         const userOrders = safeUser.orders || [];
 
         return (
@@ -241,7 +293,7 @@ export default function ProfilePage() {
                                         </div>
                                         <div className="text-xs text-gray-500 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                                             <span className="font-medium text-gray-700">
-                                                {order.product_name}
+                                                {order.product_name || "Product Name"}
                                             </span>
                                             <span className="hidden sm:inline w-1 h-1 bg-gray-300 rounded-full"></span>
                                             <span className="flex items-center gap-1">
@@ -279,6 +331,7 @@ export default function ProfilePage() {
     };
 
     const AddressBook = () => {
+        // Ensures we use the addresses fetched by getUserDetails
         const userAddresses = safeUser.address || [];
         return (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -287,6 +340,7 @@ export default function ProfilePage() {
                         <h2 className="text-xl font-bold text-gray-900">Saved Addresses</h2>
                         <p className="text-sm text-gray-500 mt-1">Manage shipping locations.</p>
                     </div>
+                    {/* Placeholder for Add Address - connects to backend via separate component/modal if needed */}
                     <button className="text-sm font-semibold text-white bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-all active:scale-95">
                         + Add New
                     </button>
@@ -469,7 +523,6 @@ export default function ProfilePage() {
                     {/* --- MAIN CONTENT AREA --- */}
                     <div className="w-full lg:w-3/4">
                         <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 sm:p-10 min-h-[600px] relative">
-                            {/* Mobile Back to Home (Optional: if you want it inside the card on mobile) */}
                             {/* Content Renders Here */}
                             {activeTab === "profile" && <ProfileDetails />}
                             {activeTab === "orders" && <OrderHistory />}

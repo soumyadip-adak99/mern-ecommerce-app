@@ -32,15 +32,15 @@ export default function ProductModal({ product, onClose }) {
     if (!product) return null;
 
     const formatPrice = (price) => {
-        return new Intl.NumberFormat("en-US", {
+        return new Intl.NumberFormat("en-IN", {
             style: "currency",
-            currency: "USD",
+            currency: "IND",
         }).format(price);
     };
 
     return (
         <div
-            className={`fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
+            className={`fixed inset-0 z-999 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${
                 isVisible ? "visible" : "invisible"
             }`}
         >
