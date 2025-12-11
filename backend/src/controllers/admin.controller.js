@@ -1,8 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { Product } from "../models/product.model.js";
+import cloudinary from "../configuration/cloudinary.js";
+import fs from "fs";
+import { Orders } from "../models/orders.model.js";
 
-export const getUsers = asyncHandler(async (req, res) => {
+export const getUsers = asyncHandler(async (_, res) => {
     try {
         const users = await User.find().select("-password -jwtToken");
 
@@ -26,7 +29,7 @@ export const getUsers = asyncHandler(async (req, res) => {
     }
 });
 
-export const getAllProducts = asyncHandler(async (req, res) => {
+export const getAllProducts = asyncHandler(async (_, res) => {
     try {
         const products = await Product.find();
 
@@ -50,48 +53,38 @@ export const getAllProducts = asyncHandler(async (req, res) => {
     }
 });
 
-export const addProduct = asyncHandler(async (req, res) => {
+export const addProduct = async (req, res) => {
     try {
-        const { product_name, product_description, price, image, status, category } = req.body;
+        const { product_name, product_description, price, status, category } = req.body;
 
-        if (
-            [product_name, product_description, price, image, category].some(
-                (field) => !field || field.trim() === ""
-            )
-        ) {
-            return res.status(400).json({
-                status: "BAD_REQUEST",
-                message: "All fields are required",
-            });
+        if (!req.file) {
+            return res.status(400).json({ message: "Image is required" });
         }
+
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "products",
+        });
+
+        
+        fs.unlinkSync(req.file.path);
 
         const product = await Product.create({
             product_name,
             product_description,
             price,
-            image,
             status,
             category,
+            image: result.secure_url, 
         });
-
-        if (!product) {
-            return res.status(500).json({
-                status: "INTERNAL_SERVER_ERROR",
-                error_message: "Error rise while adding product",
-            });
-        }
 
         return res.status(200).json({
-            message: "Product added",
-            product: product,
+            message: "Product added successfully",
+            product,
         });
-    } catch (e) {
-        return res.status(500).json({
-            status: "INTERNAL_SERVER_ERROR",
-            message: e.message,
-        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-});
+};
 
 export const deleteProduct = asyncHandler(async (req, res) => {
     try {
@@ -177,6 +170,75 @@ export const updateProduct = asyncHandler(async (req, res) => {
         return res.status(500).json({
             status: "INTERNAL_SERVER_ERROR",
             error_message: e.message,
+        });
+    }
+});
+
+export const deleteUserById = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            console.log("Id not found");
+            return res.status(400).json({
+                status: "BAD_REQUEST",
+                error_message: "Id not define",
+            });
+        }
+
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({
+                status: "NOT_FOUND",
+                error_message: "User not found",
+            });
+        }
+
+        const deleteUser = await User.findByIdAndDelete({ _id: user._id });
+
+        if (!deleteUser) {
+            console.log("Not delete user.");
+            return res.status(500).json({
+                status: "INTERNAL_SERVER_ERROR",
+                error_message: "User not delete for some internal server error.",
+            });
+        }
+
+        return res.status(200).json({
+            status: "SUCCESS",
+            message: "User delete Successfully",
+            deleteUser: deleteUser,
+        });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            status: "INTERNAL_SERVER_ERROR",
+            error_message: error.message,
+        });
+    }
+});
+
+export const getAllOrders = asyncHandler(async (_, res) => {
+    try {
+        const orders = await Orders.find();
+
+        if (!orders) {
+            console.log("No products found.");
+            return res.status(404).json({
+                status: "NOT_FOUND",
+                error_message: "No orders found",
+            });
+        }
+
+        return res.status(200).json({
+            orders: orders,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "INTERNAL_SERVER_ERROR",
+            status_code: error.message,
         });
     }
 });

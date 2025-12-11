@@ -107,6 +107,7 @@ export default function ProfilePage() {
 
     const handleLogout = () => {
         dispatch(logoutUser());
+        navigate(0);
         navigate("/");
     };
 

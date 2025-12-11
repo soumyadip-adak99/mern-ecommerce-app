@@ -71,15 +71,12 @@ export const loginUser = asyncHandler(async (req, res) => {
 
     const loggedUser = await User.findById(user._id).select("-password -jwtToken");
 
-    return res
-        .status(200)
-        .cookie("jwtToken", jwtToken, options) // Matches the middleware now
-        .json({
-            status: 200,
-            message: "User login successfully",
-            user: loggedUser,
-            token: jwtToken,
-        });
+    return res.status(200).cookie("jwtToken", jwtToken, options).json({
+        status: 200,
+        message: "User login successfully",
+        user: loggedUser,
+        token: jwtToken,
+    });
 });
 
 export const getAllProducts = asyncHandler(async (_, res) => {
@@ -101,6 +98,57 @@ export const getAllProducts = asyncHandler(async (_, res) => {
         return res.status(500).json({
             status_code: 500,
             error_message: e.message,
+        });
+    }
+});
+
+export const adminLogin = asyncHandler(async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                status: "BAD_REQUEST",
+                error_message: "Email and password required",
+            });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                status: "NOT_FOUND",
+                error_message: "user not found.",
+            });
+        }
+
+        const isValidPassword = await user.isPasswordCorrect(password);
+        const adminUser = user.roles.includes("ADMIN");
+
+        if (!isValidPassword || !adminUser) {
+            return res.status(401).json({
+                status: "FORBIDDEN",
+                error_message: "User not a admin user",
+            });
+        }
+
+        const jwtToken = user.generateJwtToken();
+
+        await user.save({ validateBeforeSave: false });
+
+        const adminLogged = await User.findById(user._id).select("-password, -jwtToken");
+
+        return res.status(200).cookie("jwtToken", jwtToken, options).json({
+            status: 200,
+            message: "user login successfully",
+            user: adminLogged,
+            token: jwtToken,
+        });
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({
+            status: "INTERNAL_SERVER_ERROR",
+            error_message: error.message,
         });
     }
 });
