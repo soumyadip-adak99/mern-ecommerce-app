@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// Import the action and reset from the slice file created above
+
 import { resetStatus } from "../app/slices/authSlice";
 import { loginAdmin } from "../app/actions/authActions";
 
@@ -15,19 +15,15 @@ function AdminAuthPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // FIX: Destructure 'errorMessage' instead of 'message' to match your Slice
     const { isLoading, isError, isSuccess, errorMessage, user } = useSelector(
         (state) => state.auth
     );
 
     useEffect(() => {
-        // If we have a user or success flag, go to dashboard
         if (isSuccess || user) {
             navigate("/dashboard");
         }
 
-        // Cleanup function: Resets error/success states when component unmounts
-        // This prevents old error messages from showing up if you return to this page later
         return () => {
             dispatch(resetStatus());
         };
@@ -43,8 +39,6 @@ function AdminAuthPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!email || !password) {
-            // It is better to use local UI state for validation errors,
-            // but alert works for simplicity
             alert("Please fill in all fields");
             return;
         }
@@ -58,7 +52,6 @@ function AdminAuthPage() {
                 <h2 className="text-3xl font-bold text-center text-gray-800">Admin Login</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Email Input */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                             Email Address
@@ -75,7 +68,6 @@ function AdminAuthPage() {
                         />
                     </div>
 
-                    {/* Password Input */}
                     <div>
                         <label
                             htmlFor="password"
@@ -95,15 +87,12 @@ function AdminAuthPage() {
                         />
                     </div>
 
-                    {/* Error Message Display */}
-                    {/* FIX: Use errorMessage from state */}
                     {isError && errorMessage && (
                         <div className="p-2 text-sm text-center text-red-600 bg-red-100 rounded">
                             {errorMessage}
                         </div>
                     )}
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={isLoading}

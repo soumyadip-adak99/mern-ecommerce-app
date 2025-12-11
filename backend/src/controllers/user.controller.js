@@ -21,7 +21,6 @@ export const getUserDetails = asyncHandler(async (req, res) => {
             .populate("buying_products")
             .populate("orders");
 
-        // const user = await User.findById(id)
 
         if (!user) {
             return res.status(404).json(new ApiError(404, "User not found"));

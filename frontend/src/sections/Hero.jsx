@@ -17,17 +17,17 @@ export default function Hero() {
                     </svg>
                     <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                         <div className="sm:text-center lg:text-left">
-                            {/* Badge */}
+                           
                             <div className="inline-flex items-center px-3 py-1 rounded-full border border-indigo-100 bg-indigo-50 text-indigo-600 text-sm font-medium mb-6">
                                 <span className="flex h-2 w-2 rounded-full bg-indigo-600 mr-2"></span>
                                 New Collection
                             </div>
-                            {/* Heading */}
+                            
                             <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                                 <span className="block">Elevate your style</span>
                                 <span className="block text-indigo-600">redefine comfort</span>
                             </h1>
-                            {/* Description */}
+                            
                             <p className="mt-3 text-base text-gray-600 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                                 Discover our latest premium streetwear collection, crafted with
                                 sustainable materials and built for the modern urban explorer.
@@ -58,7 +58,7 @@ export default function Hero() {
                                 </div> */}
                             </div>
                             <div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-500">
-                                {/* User Avatars */}
+                              
                                 <div className="flex -space-x-2 overflow-hidden">
                                     {[1, 2, 3, 4].map((num) => (
                                         <img
@@ -72,7 +72,7 @@ export default function Hero() {
                                         />
                                     ))}
                                 </div>
-                                {/* Reviews */}
+                               
                                 <div className="flex items-center">
                                     <div className="flex text-yellow-400 mr-1">
                                         {[...Array(5)].map((_, i) => (
@@ -88,7 +88,7 @@ export default function Hero() {
                     </main>
                 </div>
             </div>
-            {/* Hero image */}
+           
             <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
                 <img
                     className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"

@@ -7,24 +7,19 @@ import { BadgeIndianRupee, Handbag, CircleCheckBig, Clock } from "lucide-react";
 function DashboardPage() {
     const dispatch = useDispatch();
 
-    // 2. Extract BOTH Orders and Products from Redux
     const { orders, isLoading: ordersLoading } = useSelector((state) => state.orders);
     const { products } = useSelector((state) => state.products);
 
-    // 3. Fetch both Orders and Products on mount
     useEffect(() => {
         dispatch(getAllOrders());
         dispatch(getAllProducts());
     }, [dispatch]);
 
-    // --- CALCULATION LOGIC ---
     const stats = useMemo(() => {
-        // Initialize stats
         let calculatedStats = { revenue: 0, total: 0, success: 0, pending: 0 };
 
         if (!orders || orders.length === 0) return calculatedStats;
 
-        // Iterate through every order
         orders.forEach((order) => {
             calculatedStats.total += 1;
 
@@ -48,14 +43,12 @@ function DashboardPage() {
         return calculatedStats;
     }, [orders, products]);
 
-    // Helper to find Product Name for the table
     const getProductName = (productId) => {
         if (!products) return "Loading...";
         const prod = products.find((p) => p._id === productId);
         return prod ? prod.product_name : "Unknown Product";
     };
 
-    // Helper to find Product Price for the table
     const getProductPrice = (productId) => {
         if (!products) return 0;
         const prod = products.find((p) => p._id === productId);
@@ -66,9 +59,7 @@ function DashboardPage() {
         <div className="p-6 mx-auto max-w-7xl">
             <h1 className="mb-8 text-3xl font-bold text-gray-800">Dashboard Overview</h1>
 
-            {/* --- STATS GRID --- */}
             <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                {/* Card 1: Total Revenue */}
                 <div className="flex items-center p-4 bg-white rounded-lg shadow-md border-l-4 border-green-500">
                     <div className="p-3 mr-4 bg-green-100 rounded-full">
                         <BadgeIndianRupee className="text-green-700" size={28} />
@@ -81,7 +72,6 @@ function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Card 2: Total Orders */}
                 <div className="flex items-center p-4 bg-white rounded-lg shadow-md border-l-4 border-blue-500">
                     <div className="p-3 mr-4 bg-blue-100 rounded-full">
                         <Handbag className="text-indigo-500" size={28} />
@@ -94,7 +84,6 @@ function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Card 3: Successful Orders */}
                 <div className="flex items-center p-4 bg-white rounded-lg shadow-md border-l-4 border-indigo-500">
                     <div className="p-3 mr-4 bg-indigo-100 rounded-full">
                         <CircleCheckBig className="text-indigo-500" size={28} />
@@ -107,7 +96,6 @@ function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Card 4: Pending/Failed */}
                 <div className="flex items-center p-4 bg-white rounded-lg shadow-md border-l-4 border-yellow-500">
                     <div className="p-3 mr-4 bg-yellow-100 rounded-full">
                         <Clock className="text-yellow-500" size={28} />
@@ -121,7 +109,6 @@ function DashboardPage() {
                 </div>
             </div>
 
-            {/* --- RECENT ACTIVITY TABLE --- */}
             <div className="bg-white rounded-lg shadow-md">
                 <div className="px-6 py-4 border-b border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-800">Recent Orders</h3>
@@ -146,8 +133,6 @@ function DashboardPage() {
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {orders && orders.length > 0 ? (
-                                // Show only last 5 orders. Using slice(0,5) gets the first 5.
-                                // If you want the *newest* 5, you might need to sort or use slice(-5).reverse()
                                 [...orders]
                                     .reverse()
                                     .slice(0, 5)
@@ -157,12 +142,10 @@ function DashboardPage() {
                                                 #{order._id.slice(-6).toUpperCase()}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {/* Look up product name using the helper */}
                                                 {getProductName(order.product)}
                                             </td>
                                             <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                                                {/* Look up price using helper */}₹
-                                                {getProductPrice(order.product)}
+                                                ₹ {getProductPrice(order.product)}
                                             </td>
                                             <td className="px-6 py-4 text-sm">
                                                 <span

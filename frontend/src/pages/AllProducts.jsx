@@ -54,25 +54,20 @@ export default function AllProducts() {
         }
     };
 
-    // --- FIX START: Modified categories logic ---
     const categories = useMemo(() => {
-        // If no products, just return empty (CategoryFilter handles the default 'All' view)
         if (!Array.isArray(safeProducts)) return [];
 
         const unique = [
             ...new Set(
                 safeProducts
                     .map((p) => p.category)
-                    // Filter out nulls, "all", and "all products" to prevent DB duplicates
+
                     .filter((c) => c && !["all", "all products"].includes(c.toLowerCase()))
             ),
         ];
 
-        // We return ONLY the unique categories from the DB.
-        // We do NOT add ["All", ...] here because CategoryFilter likely adds it automatically.
         return unique;
     }, [safeProducts]);
-    // --- FIX END ---
 
     const priceRange = useMemo(() => {
         if (safeProducts.length === 0) return { min: 0, max: 1000 };
@@ -125,7 +120,6 @@ export default function AllProducts() {
         <div className="bg-gray-50 min-h-screen font-sans">
             <Navbar />
 
-            {/* Header */}
             <div className="bg-white border-b border-gray-200 sticky top-16 z-30 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <nav className="flex items-center text-sm text-gray-500 mb-4">
@@ -146,7 +140,6 @@ export default function AllProducts() {
                         </h1>
 
                         <div className="flex items-center gap-3">
-                            {/* Sort */}
                             <div className="relative group">
                                 <select
                                     value={sortOption}
@@ -164,7 +157,6 @@ export default function AllProducts() {
                                 />
                             </div>
 
-                            {/* Mobile Filters */}
                             <button
                                 onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
                                 className="lg:hidden p-2 text-gray-700 bg-white border border-gray-200 rounded-lg"
@@ -180,7 +172,6 @@ export default function AllProducts() {
                 </div>
             </div>
 
-            {/* Mobile Filter Drawer */}
             {isMobileFiltersOpen && (
                 <div className="lg:hidden bg-white border-b border-gray-200 p-4">
                     <CategoryFilter
@@ -194,7 +185,6 @@ export default function AllProducts() {
                 </div>
             )}
 
-            {/* Main */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar */}
@@ -217,7 +207,6 @@ export default function AllProducts() {
                         </div>
                     </aside>
 
-                    {/* Products */}
                     <main className="flex-1">
                         {filteredProducts.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm text-center">

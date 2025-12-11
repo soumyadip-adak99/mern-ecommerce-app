@@ -6,7 +6,6 @@ function AddProductModal({ isOpen, onClose }) {
     const dispatch = useDispatch();
     const fileInputRef = useRef(null);
 
-    // Access state safely
     const { isLoading } = useSelector((state) => state.product || { isLoading: false });
 
     const [formData, setFormData] = useState({
@@ -55,7 +54,6 @@ function AddProductModal({ isOpen, onClose }) {
             return;
         }
 
-        // Prepare Data
         const data = new FormData();
         data.append("product_name", formData.product_name);
         data.append("product_description", formData.product_description);
@@ -64,13 +62,11 @@ function AddProductModal({ isOpen, onClose }) {
         data.append("status", formData.status);
         data.append("image", imageFile);
 
-        // DEBUG: Log entries to ensure data is correct
         console.log("📦 Form Data Entries:");
         for (let [key, value] of data.entries()) {
             console.log(`${key}:`, value);
         }
 
-        // Dispatch Action
         const result = await dispatch(addProduct(data));
 
         if (result.meta.requestStatus === "fulfilled") {
@@ -78,7 +74,6 @@ function AddProductModal({ isOpen, onClose }) {
             resetForm();
             onClose();
         } else {
-            // Show the actual error message returned from the action
             alert(`Error: ${result.payload}`);
         }
     };
@@ -100,7 +95,6 @@ function AddProductModal({ isOpen, onClose }) {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Product Name */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
                             Product Name
@@ -115,7 +109,6 @@ function AddProductModal({ isOpen, onClose }) {
                         />
                     </div>
 
-                    {/* Description */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
                             Description
@@ -130,7 +123,6 @@ function AddProductModal({ isOpen, onClose }) {
                         ></textarea>
                     </div>
 
-                    {/* Price & Category */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Price</label>
@@ -158,7 +150,6 @@ function AddProductModal({ isOpen, onClose }) {
                         </div>
                     </div>
 
-                    {/* Status */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Status</label>
                         <select
@@ -173,7 +164,6 @@ function AddProductModal({ isOpen, onClose }) {
                         </select>
                     </div>
 
-                    {/* Image Upload */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
                             Product Image
@@ -197,7 +187,6 @@ function AddProductModal({ isOpen, onClose }) {
                         )}
                     </div>
 
-                    {/* Actions */}
                     <div className="flex justify-end space-x-3 pt-4 border-t">
                         <button
                             type="button"

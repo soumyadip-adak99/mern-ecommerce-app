@@ -24,7 +24,6 @@ import {
     Home,
 } from "lucide-react";
 
-// Ensure updateUserProfile is imported if you want the Save button to work
 import { logoutUser, getUserDetails } from "../features/appFeatures/authSlice";
 
 const Toast = ({ message, type, onClose }) => {
@@ -64,7 +63,6 @@ export default function ProfilePage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // Get user and loading state from Redux
     const { user, isLoading } = useSelector((state) => state.auth);
     const safeUser = user || JSON.parse(localStorage.getItem("user")) || {};
 
@@ -72,7 +70,6 @@ export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [toast, setToast] = useState(null);
 
-    // Form data state
     const [formData, setFormData] = useState({
         first_name: "",
         last_name: "",
@@ -80,7 +77,6 @@ export default function ProfilePage() {
         phone: "",
     });
 
-    // 1. Initial Fetch
     useEffect(() => {
         dispatch(getUserDetails());
     }, [dispatch]);
@@ -94,8 +90,7 @@ export default function ProfilePage() {
                 phone: safeUser.phone || "",
             });
         }
-    }, [safeUser]); // Runs whenever safeUser changes
-
+    }, [safeUser]);
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         return new Date(dateString).toLocaleDateString("en-IN", {
@@ -116,23 +111,19 @@ export default function ProfilePage() {
     };
 
     const handleSave = async () => {
-        // Basic validation
         if (!formData.first_name || !formData.last_name) {
             showToast("First and Last name are required.", "error");
             return;
         }
 
         try {
-            // Dispatch update action (assuming you have updateUserProfile)
-            // If you don't have this action yet, you can keep the logic inside the try block mocked
             if (updateUserProfile) {
                 await dispatch(updateUserProfile(formData)).unwrap();
-                // Refresh details after update to ensure consistency
+
                 dispatch(getUserDetails());
                 showToast("Profile updated successfully!");
                 setIsEditing(false);
             } else {
-                // Fallback if action is missing
                 console.log("Update Data:", formData);
                 showToast("Update simulated (Action missing)", "info");
                 setIsEditing(false);
@@ -141,8 +132,6 @@ export default function ProfilePage() {
             showToast(error.message || "Failed to update profile", "error");
         }
     };
-
-    // --- Sub-Components ---
 
     const ProfileDetails = () => (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -165,7 +154,7 @@ export default function ProfilePage() {
                         <button
                             onClick={() => {
                                 setIsEditing(false);
-                                // Reset form to current safeUser values on cancel
+
                                 setFormData({
                                     first_name: safeUser.first_name || "",
                                     last_name: safeUser.last_name || "",
@@ -228,7 +217,6 @@ export default function ProfilePage() {
                     </div>
                 ))}
 
-                {/* Email is separate because it's always disabled */}
                 <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Email Address
@@ -250,7 +238,6 @@ export default function ProfilePage() {
     );
 
     const OrderHistory = () => {
-        // Ensures we use the orders fetched by getUserDetails
         const userOrders = safeUser.orders || [];
 
         return (
@@ -270,7 +257,7 @@ export default function ProfilePage() {
                                 className="group flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-gray-100 rounded-2xl bg-white hover:border-indigo-100 hover:shadow-lg hover:shadow-indigo-50/40 transition-all duration-300"
                             >
                                 <div className="flex items-start gap-4">
-                                    <div className="h-12 w-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center flex-shrink-0 text-indigo-300 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-colors">
+                                    <div className="h-12 w-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 text-indigo-300 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-colors">
                                         <ShoppingBag size={20} />
                                     </div>
                                     <div>
@@ -302,7 +289,7 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-4 sm:mt-0 flex items-center justify-between sm:justify-end sm:gap-6 pl-[4rem] sm:pl-0">
+                                <div className="mt-4 sm:mt-0 flex items-center justify-between sm:justify-end sm:gap-6 pl-16 sm:pl-0">
                                     <span className="font-bold text-gray-900 text-lg">
                                         {order.total ? `₹${order.total}` : ""}
                                     </span>
@@ -444,8 +431,8 @@ export default function ProfilePage() {
 
             {/* --- HEADER BANNER --- */}
             <div className="bg-indigo-600 h-72 w-full relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800" />
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-indigo-600 via-indigo-700 to-violet-800" />
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[16px_16px]"></div>
 
                 {/* Back to Home Button (Top Left) */}
                 <div className="absolute top-6 left-4 sm:left-8 z-20">
@@ -460,7 +447,7 @@ export default function ProfilePage() {
 
                 {/* Decorative Circles */}
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-colors duration-700"></div>
-                <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-gray-50/50 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 w-full h-24 bg-linear-to-t from-gray-50/50 to-transparent"></div>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10">
@@ -470,10 +457,10 @@ export default function ProfilePage() {
                         <div className="sticky top-24 space-y-6">
                             {/* User Profile Card */}
                             <div className="bg-white rounded-3xl shadow-xl shadow-indigo-900/5 border border-white p-8 text-center relative overflow-hidden backdrop-blur-sm">
-                                <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-indigo-50 to-transparent"></div>
+                                <div className="absolute top-0 left-0 w-full h-20 bg-linear-to-b from-indigo-50 to-transparent"></div>
                                 <div className="relative inline-block mb-4 group cursor-pointer">
                                     <div className="w-28 h-28 mx-auto rounded-full bg-white p-1 shadow-lg ring-4 ring-indigo-50 group-hover:ring-indigo-100 transition-all">
-                                        <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center text-4xl font-bold text-indigo-600 uppercase select-none">
+                                        <div className="w-full h-full rounded-full bg-linear-to-br from-indigo-100 to-indigo-50 flex items-center justify-center text-4xl font-bold text-indigo-600 uppercase select-none">
                                             {safeUser.first_name ? safeUser.first_name[0] : "U"}
                                         </div>
                                     </div>
@@ -489,7 +476,6 @@ export default function ProfilePage() {
                                 </p>
                             </div>
 
-                            {/* Navigation Menu */}
                             <nav className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 overflow-hidden p-2">
                                 {["profile", "orders", "addresses", "settings"].map((tab) => (
                                     <button
@@ -519,10 +505,8 @@ export default function ProfilePage() {
                         </div>
                     </div>
 
-                    {/* --- MAIN CONTENT AREA --- */}
                     <div className="w-full lg:w-3/4">
                         <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 sm:p-10 min-h-[600px] relative">
-                            {/* Content Renders Here */}
                             {activeTab === "profile" && <ProfileDetails />}
                             {activeTab === "orders" && <OrderHistory />}
                             {activeTab === "addresses" && <AddressBook />}

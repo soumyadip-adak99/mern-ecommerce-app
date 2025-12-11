@@ -1,19 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {
-    Filter,
-    ChevronDown,
-    Star,
-    ShoppingCart,
-    Heart,
-    X,
-    Home,
-    ChevronRight,
-    SlidersHorizontal,
-    Search,
-    User,
-    Menu,
-    Check,
-} from "lucide-react";
+import { Check } from "lucide-react";
 
 export default function CategoryFilter({
     categories,
@@ -74,7 +59,6 @@ export default function CategoryFilter({
                 </div>
             </div>
 
-            {/* Price Filter */}
             <div className="pt-6 border-t border-gray-100">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -101,7 +85,6 @@ export default function CategoryFilter({
                 </div>
             </div>
 
-            {/* Help Box */}
             <div className="mt-8 bg-indigo-900 rounded-xl p-5 text-white relative overflow-hidden">
                 <div className="relative z-10">
                     <h4 className="font-bold mb-1">Need Help?</h4>
@@ -112,7 +95,7 @@ export default function CategoryFilter({
                         Chat with Sales
                     </button>
                 </div>
-                {/* Decorative Circles */}
+
                 <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
                 <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-indigo-500/20 rounded-full blur-xl"></div>
             </div>

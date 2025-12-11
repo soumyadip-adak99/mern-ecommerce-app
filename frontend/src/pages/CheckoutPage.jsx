@@ -12,19 +12,13 @@ import {
     Truck,
     ShieldCheck,
     AlertCircle,
-    X, // Added X icon for closing modal
+    X,
 } from "lucide-react";
-
-// Check these paths against your folder structure:
 import { getProductById } from "../features/product/ProductAction";
 import { createOrder } from "../features/orders/orderAction";
 import { resetOrderState } from "../features/appFeatures/orderSlice";
-
-// --- IMPORT YOUR ADD ADDRESS ACTION HERE ---
-// Ensure this path points to where your addAddress thunk is defined
 import { addAddress } from "../features/appFeatures/authSlice";
 
-// --- Utility: Load Razorpay Script ---
 const loadRazorpayScript = (src) => {
     return new Promise((resolve) => {
         const script = document.createElement("script");
@@ -35,7 +29,6 @@ const loadRazorpayScript = (src) => {
     });
 };
 
-// --- Utility: Currency Formatter ---
 const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
         style: "currency",
@@ -49,12 +42,10 @@ function CheckoutPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // 1. Local State
     const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState("COD");
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // --- NEW: Address Modal State ---
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [isAddingAddress, setIsAddingAddress] = useState(false);
     const [addressFormData, setAddressFormData] = useState({
@@ -69,7 +60,6 @@ function CheckoutPage() {
         country: "India",
     });
 
-    // 2. Redux State
     const { product, isLoading: productLoading } = useSelector((state) => state.product);
     const { user } = useSelector((state) => state.auth);
     const { isLoading: orderLoading } = useSelector((state) => state.order);
@@ -77,7 +67,6 @@ function CheckoutPage() {
     const safeUser = user || JSON.parse(localStorage.getItem("user")) || {};
     const addresses = safeUser.address || [];
 
-    // 3. Initial Fetch
     useEffect(() => {
         if (id) {
             dispatch(getProductById(id));
@@ -88,13 +77,10 @@ function CheckoutPage() {
         };
     }, [id, dispatch]);
 
-    // --- HANDLERS ---
-
     const handlePlaceOrder = async () => {
-        // Validation
         if (!addresses || addresses.length === 0) {
             alert("Please add a shipping address to proceed.");
-            setShowAddressModal(true); // Open modal if no address
+            setShowAddressModal(true);
             return;
         }
 
@@ -110,7 +96,6 @@ function CheckoutPage() {
         };
 
         try {
-            // ... (Existing Order Logic remains unchanged) ...
             if (paymentMethod === "COD") {
                 const resultAction = await dispatch(
                     createOrder({
@@ -129,7 +114,6 @@ function CheckoutPage() {
                     alert("Order placed, but could not redirect.");
                 }
             } else if (paymentMethod === "ONLINE") {
-                // ... (Existing Razorpay Logic) ...
                 setIsProcessing(true);
                 const isScriptLoaded = await loadRazorpayScript(
                     "https://checkout.razorpay.com/v1/checkout.js"
@@ -196,8 +180,6 @@ function CheckoutPage() {
         }
     };
 
-    // --- ADDRESS FORM HANDLERS ---
-
     const handleAddressChange = (e) => {
         setAddressFormData({ ...addressFormData, [e.target.name]: e.target.value });
     };
@@ -206,10 +188,8 @@ function CheckoutPage() {
         e.preventDefault();
         setIsAddingAddress(true);
         try {
-            // Dispatch the addAddress action
             await dispatch(addAddress(addressFormData)).unwrap();
 
-            // Close modal and reset form on success
             setShowAddressModal(false);
             setAddressFormData({
                 name: "",
@@ -223,8 +203,6 @@ function CheckoutPage() {
                 country: "India",
             });
 
-            // Auto-select the new address (optional logic: select the last one)
-            // Since Redux updates 'addresses', the length will increase in the next render
             setSelectedAddressIndex(addresses.length);
         } catch (error) {
             alert(error.message || "Failed to add address");
@@ -233,7 +211,6 @@ function CheckoutPage() {
         }
     };
 
-    // --- Loading State ---
     if (productLoading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-indigo-600">
@@ -257,7 +234,6 @@ function CheckoutPage() {
 
     return (
         <div className="min-h-screen bg-gray-50/50 pb-20 font-sans relative">
-            {/* Header Background */}
             <div className="bg-indigo-600 h-48 w-full absolute top-0 left-0 z-0 shadow-md"></div>
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-8">
@@ -271,9 +247,7 @@ function CheckoutPage() {
                 <h1 className="text-3xl font-bold text-white mb-8">Checkout</h1>
 
                 <div className="flex flex-col lg:flex-row gap-8">
-                    {/* --- LEFT COLUMN: INPUTS --- */}
                     <div className="flex-1 space-y-6">
-                        {/* 1. Address Selection */}
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
                                 <MapPin className="text-indigo-600" size={20} /> Shipping Address
@@ -328,7 +302,7 @@ function CheckoutPage() {
                                             No delivery addresses found.
                                         </p>
                                         <button
-                                            onClick={() => setShowAddressModal(true)} // UPDATED: Open Modal
+                                            onClick={() => setShowAddressModal(true)}
                                             className="text-indigo-600 font-bold text-sm hover:underline"
                                         >
                                             + Add New Address
@@ -338,7 +312,7 @@ function CheckoutPage() {
 
                                 {addresses.length > 0 && (
                                     <button
-                                        onClick={() => setShowAddressModal(true)} // UPDATED: Open Modal
+                                        onClick={() => setShowAddressModal(true)}
                                         className="flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 mt-2 transition-colors"
                                     >
                                         <Plus size={16} /> Add New Address
@@ -347,13 +321,11 @@ function CheckoutPage() {
                             </div>
                         </div>
 
-                        {/* 2. Payment Method */}
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
                                 <CreditCard className="text-indigo-600" size={20} /> Payment Method
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {/* COD */}
                                 <div
                                     onClick={() => setPaymentMethod("COD")}
                                     className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${
@@ -377,7 +349,7 @@ function CheckoutPage() {
                                         Cash on Delivery
                                     </span>
                                 </div>
-                                {/* Online */}
+
                                 <div
                                     onClick={() => setPaymentMethod("ONLINE")}
                                     className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${
@@ -405,14 +377,12 @@ function CheckoutPage() {
                         </div>
                     </div>
 
-                    {/* --- RIGHT COLUMN: ORDER SUMMARY --- */}
                     <div className="w-full lg:w-[400px]">
                         <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 sticky top-6">
                             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-6">
                                 <ShoppingBag className="text-indigo-600" size={20} /> Order Summary
                             </h2>
 
-                            {/* Product Info */}
                             <div className="flex gap-4 mb-6 pb-6 border-b border-gray-100">
                                 <div className="h-20 w-20 shrink-0 rounded-lg bg-gray-100 border border-gray-200 p-1">
                                     <img
@@ -432,7 +402,6 @@ function CheckoutPage() {
                                 </div>
                             </div>
 
-                            {/* Calculations */}
                             <div className="space-y-3 text-sm mb-6">
                                 <div className="flex justify-between text-gray-600">
                                     <span>Subtotal</span>
@@ -448,7 +417,6 @@ function CheckoutPage() {
                                 </div>
                             </div>
 
-                            {/* Trust Badges */}
                             <div className="grid grid-cols-2 gap-2 mb-6 text-[10px] text-gray-500 bg-gray-50 p-3 rounded-lg border border-gray-100">
                                 <div className="flex flex-col items-center gap-1 text-center">
                                     <ShieldCheck size={18} className="text-green-600" />
@@ -460,7 +428,6 @@ function CheckoutPage() {
                                 </div>
                             </div>
 
-                            {/* Action Button */}
                             <button
                                 onClick={handlePlaceOrder}
                                 disabled={orderLoading || isProcessing || addresses.length === 0}
@@ -489,7 +456,6 @@ function CheckoutPage() {
                 </div>
             </div>
 
-            {/* --- ADD ADDRESS MODAL --- */}
             {showAddressModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
                     <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl p-6 md:p-8 relative max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
@@ -539,7 +505,7 @@ function CheckoutPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-sm font-semibold text-gray-700">
-                                        Pincode
+                                        Pin-Code / Zip-Code
                                     </label>
                                     <input
                                         required

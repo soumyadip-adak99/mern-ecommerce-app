@@ -26,11 +26,11 @@ function CartPage() {
         dispatch(getUserDetails());
     }, [dispatch]);
 
-    // 3. Handlers
+   
     const handleRemoveItem = async (productId) => {
         if (!productId) return;
         try {
-            // Remove item then refresh user details to update UI
+           
             await dispatch(removeFromCart(productId)).unwrap();
             dispatch(getUserDetails());
         } catch (error) {
@@ -40,10 +40,10 @@ function CartPage() {
 
     const handleQuantityChange = async (productId, currentQty, change) => {
         const newQuantity = currentQty + change;
-        if (newQuantity < 1) return; // Prevent going below 1
+        if (newQuantity < 1) return; 
 
         try {
-            // Update quantity then refresh user details
+           
             await dispatch(updateCartQuantity({ productId, quantity: newQuantity })).unwrap();
             dispatch(getUserDetails());
         } catch (error) {
@@ -51,20 +51,19 @@ function CartPage() {
         }
     };
 
-    // 4. Calculations
+  
     const subtotal = cartItems.reduce((acc, item) => {
-        // Handle structure: item might be the product itself or nested in item.product
-        // Backend usually returns { product: {...}, quantity: 2 } inside cart array
+      
         const productData = item.product || item;
         const price = Number(productData.price) || 0;
         const qty = Number(item.quantity) || 1;
         return acc + price * qty;
     }, 0);
 
-    const shipping = 0; // Free shipping logic
+    const shipping = 0; 
     const total = subtotal + shipping;
 
-    // --- RENDER: LOADING ---
+
     if (isLoading && !user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -73,7 +72,7 @@ function CartPage() {
         );
     }
 
-    // --- RENDER: EMPTY CART ---
+
     if (!cartItems || cartItems.length === 0) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
@@ -95,11 +94,11 @@ function CartPage() {
         );
     }
 
-    // --- RENDER: CART LIST ---
+
     return (
         <div className="min-h-screen bg-gray-50/50 py-12 font-sans">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header */}
+              
                 <div className="flex items-center gap-2 mb-8 text-sm text-gray-500">
                     <Link
                         to="/products"
@@ -112,10 +111,10 @@ function CartPage() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                    {/* Items Column */}
+                 
                     <div className="lg:col-span-8">
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                            {/* Table Header */}
+                          
                             <div className="hidden sm:grid grid-cols-12 gap-4 p-6 border-b border-gray-100 bg-gray-50/50 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 <div className="col-span-6">Product</div>
                                 <div className="col-span-2 text-center">Quantity</div>
@@ -123,10 +122,10 @@ function CartPage() {
                                 <div className="col-span-2 text-right">Total</div>
                             </div>
 
-                            {/* Items */}
+                          
                             <div className="divide-y divide-gray-100">
                                 {cartItems.map((item) => {
-                                    // Normalize data depending on backend response structure
+                                   
                                     const product = item.product || item;
                                     const productId = product._id || product.id;
                                     const qty = item.quantity || 1;
@@ -137,7 +136,7 @@ function CartPage() {
                                             className="p-6 transition-colors hover:bg-gray-50/30"
                                         >
                                             <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
-                                                {/* Product Info */}
+                                                
                                                 <div className="sm:col-span-6 flex items-center gap-4">
                                                     <div className="h-20 w-20 shrink-0 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 overflow-hidden">
                                                         {product.image ? (
@@ -169,7 +168,7 @@ function CartPage() {
                                                     </div>
                                                 </div>
 
-                                                {/* Quantity Controls */}
+                                               
                                                 <div className="sm:col-span-2 flex justify-between sm:justify-center items-center">
                                                     <span className="sm:hidden text-xs font-medium text-gray-500">
                                                         Qty:
@@ -206,12 +205,12 @@ function CartPage() {
                                                     </div>
                                                 </div>
 
-                                                {/* Price (Single) */}
+                                                
                                                 <div className="hidden sm:block sm:col-span-2 text-right text-sm text-gray-600">
                                                     ₹{(Number(product.price) || 0).toLocaleString()}
                                                 </div>
 
-                                                {/* Total Price */}
+                                                
                                                 <div className="sm:col-span-2 flex justify-between sm:block text-right">
                                                     <span className="sm:hidden text-sm font-medium text-gray-500">
                                                         Total:
@@ -231,7 +230,7 @@ function CartPage() {
                         </div>
                     </div>
 
-                    {/* Summary Column */}
+                   
                     <div className="lg:col-span-4">
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-24">
                             <h2 className="text-lg font-bold text-gray-900 mb-6">Order Summary</h2>

@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -21,20 +20,14 @@ export default function OrderProductDetailsPage() {
     const { orderId } = useParams();
     const navigate = useNavigate();
 
-    // 1. Get User Data
     const { user } = useSelector((state) => state.auth);
     const safeUser = user || JSON.parse(localStorage.getItem("user")) || {};
 
-    // 2. Find the specific order
     const order = safeUser.orders?.find((o) => o._id === orderId);
 
-    // 3. Extract Shipping Address
-    // Based on your screenshot, address is an array. We usually take the first one [0]
-    // or the one embedded in the order. Here we use user.address[0] as the primary source.
     const shippingAddress =
         safeUser.address && safeUser.address.length > 0 ? safeUser.address[0] : null;
 
-    // Helper: Format Date
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         return new Date(dateString).toLocaleDateString("en-IN", {
@@ -46,7 +39,6 @@ export default function OrderProductDetailsPage() {
         });
     };
 
-    // 4. Handle Order Not Found
     if (!order) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -61,8 +53,6 @@ export default function OrderProductDetailsPage() {
             </div>
         );
     }
-
-    // --- UI COMPONENTS ---
 
     const OrderStatusStepper = ({ status }) => {
         const steps = ["Processing", "Shipped", "Out for Delivery", "Delivered"];
@@ -112,14 +102,12 @@ export default function OrderProductDetailsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50/50 font-sans pb-20">
-            {/* Header Background */}
             <div className="bg-indigo-600 h-64 w-full relative overflow-hidden">
                 <div className="absolute inset-0 bg-linear-to-br from-indigo-600 to-violet-800 opacity-90" />
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[16px_16px]"></div>
             </div>
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-52 relative z-10">
-                {/* Navigation Back */}
                 <button
                     onClick={() => navigate(-1)}
                     className="flex items-center gap-2 text-white/90 hover:text-white mb-6 hover:bg-white/10 w-fit px-3 py-1.5 rounded-full transition-all"
@@ -128,9 +116,7 @@ export default function OrderProductDetailsPage() {
                 </button>
 
                 <div className="flex flex-col lg:flex-row gap-6">
-                    {/* --- MAIN CONTENT (LEFT) --- */}
                     <div className="flex-1 space-y-6">
-                        {/* 1. Header Card */}
                         <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 sm:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                                 <div>
@@ -164,13 +150,11 @@ export default function OrderProductDetailsPage() {
                                 </div>
                             </div>
 
-                            {/* Stepper */}
                             <div className="mt-8 mb-4 px-2">
                                 <OrderStatusStepper status={order.status} />
                             </div>
                         </div>
 
-                        {/* 2. Products List */}
                         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
                             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
                                 <h2 className="font-bold text-gray-900 flex items-center gap-2">
@@ -179,7 +163,6 @@ export default function OrderProductDetailsPage() {
                             </div>
                             <div className="p-6">
                                 <div className="flex items-start gap-5">
-                                    {/* Product Image */}
                                     <div className="h-24 w-24 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0">
                                         {order.image ? (
                                             <img
@@ -194,7 +177,6 @@ export default function OrderProductDetailsPage() {
                                         )}
                                     </div>
 
-                                    {/* Product Details */}
                                     <div className="flex-1">
                                         <div className="flex justify-between items-start">
                                             <div>
@@ -226,9 +208,7 @@ export default function OrderProductDetailsPage() {
                         </div>
                     </div>
 
-                    {/* --- SIDEBAR (RIGHT) --- */}
                     <div className="w-full lg:w-1/3 space-y-6">
-                        {/* 1. Payment Summary */}
                         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
                             <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                                 <CreditCard size={18} className="text-indigo-600" /> Payment Summary
@@ -255,7 +235,6 @@ export default function OrderProductDetailsPage() {
                             </div>
                         </div>
 
-                        {/* 2. Shipping Address */}
                         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
                             <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                                 <MapPin size={18} className="text-indigo-600" /> Shipping Details
@@ -303,7 +282,6 @@ export default function OrderProductDetailsPage() {
                             )}
                         </div>
 
-                        {/* 3. Help */}
                         <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
                             <div className="flex items-start gap-3">
                                 <div className="bg-white p-2 rounded-full text-indigo-600 shadow-sm">

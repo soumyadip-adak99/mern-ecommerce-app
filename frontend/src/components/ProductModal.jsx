@@ -8,14 +8,12 @@ export default function ProductModal({ product, onClose }) {
 
     const navigate = useNavigate();
 
-    // Handle Entry Animation & Body Scroll Lock
     useEffect(() => {
         if (product) {
             setIsVisible(true);
             document.body.style.overflow = "hidden";
         }
 
-        // Handle ESC key to close
         const handleEsc = (e) => {
             if (e.key === "Escape") handleClose();
         };
@@ -48,7 +46,6 @@ export default function ProductModal({ product, onClose }) {
                 isVisible ? "visible" : "invisible"
             }`}
         >
-            {/* Backdrop */}
             <div
                 className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
                     isVisible ? "opacity-100" : "opacity-0"
@@ -56,7 +53,6 @@ export default function ProductModal({ product, onClose }) {
                 onClick={handleClose}
             />
 
-            {/* Modal Container */}
             <div
                 className={`bg-white w-full max-w-5xl max-h-[90vh] rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col md:flex-row transition-all duration-300 ease-out transform ${
                     isVisible
@@ -66,7 +62,6 @@ export default function ProductModal({ product, onClose }) {
                 role="dialog"
                 aria-modal="true"
             >
-                {/* Close Button */}
                 <button
                     onClick={handleClose}
                     className="absolute top-3 right-3 z-30 p-2 bg-white/80 backdrop-blur-md rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors shadow-sm border border-gray-100 group"
@@ -77,7 +72,6 @@ export default function ProductModal({ product, onClose }) {
                     />
                 </button>
 
-                {/* Left Side: Product Image Area */}
                 <div className="w-full md:w-1/2 h-64 md:h-auto bg-gray-50 relative shrink-0 group select-none flex items-center justify-center p-6 lg:p-12">
                     <img
                         src={product.image}
@@ -85,7 +79,6 @@ export default function ProductModal({ product, onClose }) {
                         className="max-h-full max-w-full object-contain drop-shadow-xl transform group-hover:scale-105 transition-transform duration-500 ease-in-out"
                     />
 
-                    {/* Status Badge */}
                     {product.status && (
                         <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
                             <span
@@ -103,11 +96,8 @@ export default function ProductModal({ product, onClose }) {
                     )}
                 </div>
 
-                {/* Right Side: Details & Actions */}
                 <div className="w-full md:w-1/2 flex flex-col bg-white h-full overflow-hidden">
-                    {/* Scrollable Content */}
                     <div className="flex-1 overflow-y-auto p-5 sm:p-8 lg:p-10 custom-scrollbar">
-                        {/* Header Info */}
                         <div className="mb-6">
                             <div className="flex flex-wrap items-center gap-2 mb-3">
                                 <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-md">
@@ -138,7 +128,6 @@ export default function ProductModal({ product, onClose }) {
                             </div>
                         </div>
 
-                        {/* Description */}
                         <div className="prose prose-sm prose-gray text-gray-500 leading-relaxed mb-8">
                             <p>
                                 {product.product_description ||
@@ -146,7 +135,6 @@ export default function ProductModal({ product, onClose }) {
                             </p>
                         </div>
 
-                        {/* Trust Indicators */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                                 <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 shrink-0">
@@ -171,9 +159,7 @@ export default function ProductModal({ product, onClose }) {
                         </div>
                     </div>
 
-                    {/* Footer Actions */}
                     <div className="p-5 sm:p-8 bg-white border-t border-gray-100 mt-auto">
-                        {/* Quantity Selector */}
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
                             <span className="text-sm font-semibold text-gray-700">Quantity</span>
                             <div className="flex items-center bg-gray-50 rounded-lg p-1 border border-gray-200">
@@ -196,7 +182,6 @@ export default function ProductModal({ product, onClose }) {
                             </div>
                         </div>
 
-                        {/* Action Buttons - FIXED: Removed Add to Cart, Buy Now is full width */}
                         <div className="w-full">
                             <button
                                 onClick={() => navigate(`/buy-product/${product?._id}`)}

@@ -10,7 +10,6 @@ function OrdersPage() {
         dispatch(getAllOrders());
     }, [dispatch]);
 
-    // Helper: Format Date
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         return new Date(dateString).toLocaleDateString("en-US", {
@@ -22,7 +21,6 @@ function OrdersPage() {
         });
     };
 
-    // Helper: Status Color Badge
     const getStatusBadge = (status) => {
         const s = status ? status.toLowerCase() : "";
         if (s === "success" || s === "paid" || s === "completed") {
@@ -51,13 +49,11 @@ function OrdersPage() {
         );
     };
 
-    // Helper: Safe Render for Complex Objects (Address/Products)
-    // This prevents React errors if your DB returns an Object instead of a String
     const renderComplexField = (field) => {
         if (!field) return "N/A";
         if (typeof field === "string") return field;
-        if (Array.isArray(field)) return `${field.length} Items`; // e.g., if products is an array
-        if (typeof field === "object") return JSON.stringify(field).slice(0, 30) + "..."; // Fallback
+        if (Array.isArray(field)) return `${field.length} Items`;
+        if (typeof field === "object") return JSON.stringify(field).slice(0, 30) + "...";
         return field;
     };
 
@@ -68,7 +64,6 @@ function OrdersPage() {
                 <span className="text-sm text-gray-500">{orders?.length || 0} Total Orders</span>
             </div>
 
-            {/* Error State */}
             {isError && (
                 <div className="p-4 mb-4 text-red-700 bg-red-100 border-l-4 border-red-500 rounded">
                     <p className="font-bold">Error</p>
@@ -76,21 +71,18 @@ function OrdersPage() {
                 </div>
             )}
 
-            {/* Loading State */}
             {isLoading ? (
                 <div className="flex justify-center items-center h-64">
                     <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
                 </div>
             ) : (
                 <>
-                    {/* Empty State */}
                     {!isError && orders?.length === 0 && (
                         <div className="text-center py-12 bg-white rounded-lg shadow">
                             <p className="text-gray-500 text-lg">No orders found.</p>
                         </div>
                     )}
 
-                    {/* Table */}
                     {!isError && orders?.length > 0 && (
                         <div className="overflow-x-auto bg-white rounded-lg shadow">
                             <table className="min-w-full leading-normal">
@@ -120,7 +112,6 @@ function OrdersPage() {
                                             key={order._id}
                                             className="border-b border-gray-200 hover:bg-gray-50"
                                         >
-                                            {/* Order ID (Truncated) */}
                                             <td className="px-5 py-5 text-sm bg-white">
                                                 <p
                                                     className="text-gray-900 whitespace-nowrap"
@@ -130,34 +121,28 @@ function OrdersPage() {
                                                 </p>
                                             </td>
 
-                                            {/* Payment Status */}
                                             <td className="px-5 py-5 text-sm bg-white">
                                                 {getStatusBadge(order.payment_status)}
                                             </td>
 
-                                            {/* Payment Mode */}
                                             <td className="px-5 py-5 text-sm text-gray-500 bg-white capitalize">
                                                 {order.payment_mode}
                                             </td>
 
-                                            {/* User ID */}
                                             <td className="px-5 py-5 text-sm bg-white">
                                                 <p className="text-gray-900 whitespace-nowrap">
                                                     {order.userId}
                                                 </p>
                                             </td>
 
-                                            {/* Address (Safe Render) */}
                                             <td className="px-5 py-5 text-sm text-gray-500 bg-white">
                                                 {renderComplexField(order.address)}
                                             </td>
 
-                                            {/* Product (Safe Render) */}
                                             <td className="px-5 py-5 text-sm text-gray-500 bg-white">
                                                 {renderComplexField(order.product)}
                                             </td>
 
-                                            {/* Created At */}
                                             <td className="px-5 py-5 text-sm text-gray-500 bg-white whitespace-nowrap">
                                                 {formatDate(order.createdAt)}
                                             </td>

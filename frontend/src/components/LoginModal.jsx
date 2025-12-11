@@ -1,18 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-    ShoppingCart,
-    Search,
-    User,
-    LogOut,
-    Settings,
-    ShoppingBag,
-    Menu,
-    X,
-    Loader2, // Added for loading state
-} from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-
-// Redux Imports
+import { useState } from "react";
+import { X, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { loginUser } from "../features/appFeatures/authSlice";
 
 export default function LoginModal({ onClose, dispatch, isLoading, isError, errorMessage }) {
@@ -30,7 +18,6 @@ export default function LoginModal({ onClose, dispatch, isLoading, isError, erro
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-                {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <h2 className="text-xl font-bold text-gray-800">Welcome Back</h2>
                     <button
@@ -41,7 +28,6 @@ export default function LoginModal({ onClose, dispatch, isLoading, isError, erro
                     </button>
                 </div>
 
-                {/* Body */}
                 <div className="p-6">
                     {isError && (
                         <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
@@ -105,7 +91,6 @@ export default function LoginModal({ onClose, dispatch, isLoading, isError, erro
                     </form>
                 </div>
 
-                {/* Footer */}
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 text-center">
                     <p className="text-sm text-gray-600">
                         Don't have an account?{" "}

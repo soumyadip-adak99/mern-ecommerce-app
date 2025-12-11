@@ -6,26 +6,23 @@ import {
     Mail,
     Lock,
     ArrowRight,
-    ArrowLeft, // Imported ArrowLeft
+    ArrowLeft,
     Loader2,
     Eye,
     EyeOff,
     LogIn,
     ShoppingBag,
 } from "lucide-react";
-
 import { registerUser, loginUser, resetStatus } from "../features/appFeatures/authSlice";
 
 function UserAuthPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { isLoading, isError, errorMessage, isSuccess } = useSelector((state) => state.auth);
+    const { isLoading, isError, isSuccess } = useSelector((state) => state.auth);
 
-    // State to toggle between Login and Register views
     const [isLoginView, setIsLoginView] = useState(false);
 
-    // Form State
     const [formData, setFormData] = useState({
         first_name: "",
         last_name: "",
@@ -53,14 +50,12 @@ function UserAuthPage() {
         }
     };
 
-    // Handle View Toggle (Clear errors/data when switching)
     const toggleView = () => {
         setIsLoginView(!isLoginView);
         dispatch(resetStatus());
         setFormData({ first_name: "", last_name: "", email: "", password: "" });
     };
 
-    // Handle Success Redirects
     useEffect(() => {
         if (isSuccess) {
             if (!isLoginView) {
@@ -77,7 +72,6 @@ function UserAuthPage() {
         }
     }, [isSuccess, isLoginView, navigate, dispatch]);
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
             dispatch(resetStatus());
@@ -86,16 +80,14 @@ function UserAuthPage() {
 
     return (
         <div className="min-h-screen flex bg-gray-50">
-            {/* --- Left Side: Hero Image --- */}
             <div className="hidden lg:flex w-1/2 bg-indigo-600 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-violet-700 opacity-90" />
+                <div className="absolute inset-0 bg-linear-to-br from-indigo-600 to-violet-700 opacity-90" />
                 <img
                     src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
                     alt="Shopping Experience"
                     className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60"
                 />
 
-                {/* Decorative Pattern */}
                 <div
                     className="absolute inset-0 opacity-10"
                     style={{
@@ -120,10 +112,7 @@ function UserAuthPage() {
                 </div>
             </div>
 
-            {/* --- Right Side: Form --- */}
-            {/* Added 'relative' class here to position the back button correctly */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-20 bg-white relative">
-                {/* --- BACK TO HOME BUTTON --- */}
                 <Link
                     to="/"
                     className="absolute top-6 left-6 sm:top-8 sm:left-8 flex items-center gap-2 text-gray-500 hover:text-indigo-600 transition-colors group"
@@ -135,7 +124,6 @@ function UserAuthPage() {
                 </Link>
 
                 <div className="w-full max-w-md space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-                    {/* Header */}
                     <div className="text-center">
                         <div className="flex justify-center mb-4 lg:hidden">
                             <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
@@ -156,7 +144,6 @@ function UserAuthPage() {
                         </p>
                     </div>
 
-                    {/* Messages */}
                     {isError && (
                         <div className="p-4 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100 flex items-center gap-2 animate-in fade-in">
                             <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
@@ -173,9 +160,7 @@ function UserAuthPage() {
                         </div>
                     )}
 
-                    {/* Form */}
                     <form className="space-y-5" onSubmit={handleSubmit}>
-                        {/* REGISTER ONLY: Name Fields */}
                         {!isLoginView && (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in slide-in-from-top-2 fade-in duration-300">
                                 <div>
@@ -227,7 +212,6 @@ function UserAuthPage() {
                             </div>
                         )}
 
-                        {/* Email */}
                         <div>
                             <label
                                 htmlFor="email"
@@ -252,7 +236,6 @@ function UserAuthPage() {
                             </div>
                         </div>
 
-                        {/* Password */}
                         <div>
                             <div className="flex items-center justify-between mb-1">
                                 <label
@@ -294,7 +277,6 @@ function UserAuthPage() {
                             </div>
                         </div>
 
-                        {/* REGISTER ONLY: Terms */}
                         {!isLoginView && (
                             <div className="flex items-center animate-in fade-in">
                                 <input
@@ -323,7 +305,6 @@ function UserAuthPage() {
                             </div>
                         )}
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isLoading || isSuccess}

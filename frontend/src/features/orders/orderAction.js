@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { BASE_API } from "../../utils/Constance"; // Adjust path if utils is located elsewhere
+import { BASE_API } from "../../utils/Constance";
 
 export const createOrder = createAsyncThunk(
     "order/createOrder",
@@ -11,7 +11,6 @@ export const createOrder = createAsyncThunk(
                 return rejectWithValue("Unauthorized: Token missing");
             }
 
-            // Using the specific URL: /user/create-order/:id
             const response = await fetch(`${BASE_API}/user/create-order/${id}`, {
                 method: "POST",
                 headers: {
@@ -27,7 +26,6 @@ export const createOrder = createAsyncThunk(
                 return rejectWithValue(data.message || "Order creation failed");
             }
 
-            
             return data;
         } catch (error) {
             return rejectWithValue(error.message || "Something went wrong");

@@ -21,14 +21,13 @@ const productSlice = createSlice({
 
     extraReducers: (builder) => {
         builder
-            /* GET ALL PRODUCTS */
             .addCase(getAllProducts.pending, (state) => {
                 state.isLoading = true;
                 state.isError = false;
             })
             .addCase(getAllProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // Support response structures: { products: [...] } or just [...]
+
                 state.products = action.payload.products || action.payload || [];
             })
             .addCase(getAllProducts.rejected, (state, action) => {
@@ -37,14 +36,13 @@ const productSlice = createSlice({
                 state.errorMessage = action.payload;
             })
 
-            /* ADD PRODUCT */
             .addCase(addProduct.pending, (state) => {
                 state.isLoading = true;
                 state.isError = false;
             })
             .addCase(addProduct.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // Support response structures: { product: {...} } or just {...}
+
                 const newProduct = action.payload.product || action.payload;
                 if (newProduct) {
                     state.products.push(newProduct);

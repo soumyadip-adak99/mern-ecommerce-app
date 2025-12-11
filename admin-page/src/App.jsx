@@ -1,9 +1,8 @@
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AdminAuthPage from "./pages/AdminAuthPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
-import Layout from "./Layout/Layout"; // Adjust path if needed
+import Layout from "./Layout/Layout";
 import OrdersPage from "./pages/OrdersPage";
 import AllProducts from "./pages/AllProducts";
 

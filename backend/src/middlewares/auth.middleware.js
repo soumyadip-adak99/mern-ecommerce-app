@@ -11,7 +11,6 @@ export const verifyJwt = asyncHandler(async (req, res, next) => {
             (authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1]);
 
         if (!token) {
-            // throw new ApiError(401, "Unauthorized: Token not found");
             return res.status(401).send("Unauthorized").json({
                 message: "Unauthorized",
             });
@@ -29,7 +28,6 @@ export const verifyJwt = asyncHandler(async (req, res, next) => {
         const user = await User.findById(decoded?._id).select("-password -jwtToken");
 
         if (!user) {
-            //          throw new ApiError(404, "User not found");
             return res.status(404).json({
                 message: "User not found",
             });
@@ -49,7 +47,6 @@ export const findLoggedUser = asyncHandler(async (req, _, next) => {
     try {
         const authHeader = req.header("Authorization");
 
-        // FIX: Changed 'accessToken' to 'jwtToken' to match the login controller
         const token =
             req.cookies?.jwtToken ||
             (authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1]);
@@ -76,7 +73,9 @@ export const findLoggedUserAdmin = asyncHandler(async (req, res, next) => {
     try {
         const authHeader = req.header("Authorization");
 
-        const token = req.cookies?.jwtToken || (authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1]);
+        const token =
+            req.cookies?.jwtToken ||
+            (authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1]);
 
         if (!token) {
             return res.status(401).json({
@@ -96,7 +95,6 @@ export const findLoggedUserAdmin = asyncHandler(async (req, res, next) => {
             });
         }
 
-        // FIXED includes()
         if (adminUser.roles.includes("ADMIN")) {
             req.user = adminUser;
             return next();
@@ -106,9 +104,7 @@ export const findLoggedUserAdmin = asyncHandler(async (req, res, next) => {
             status: "FORBIDDEN",
             message: "Access denied. Admin only.",
         });
-
     } catch (e) {
         return res.status(500).json({ error: e.message });
     }
 });
-

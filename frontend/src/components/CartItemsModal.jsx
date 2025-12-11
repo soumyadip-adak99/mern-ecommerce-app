@@ -7,7 +7,6 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
 
     return (
         <div className="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 ring-1 ring-black/5">
-            {/* --- Header --- */}
             <div className="px-5 py-4 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
                 <h3 className="font-semibold text-gray-900 text-sm">Shopping Cart</h3>
                 <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
@@ -15,10 +14,8 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
                 </span>
             </div>
 
-            {/* --- Cart Items Scrollable Area --- */}
             <div className="max-h-96 overflow-y-auto">
                 {userCartItems.length === 0 ? (
-                    // Empty State
                     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
                         <div className="bg-gray-50 p-4 rounded-full mb-3 text-gray-300">
                             <ShoppingBag size={40} strokeWidth={1.5} />
@@ -29,14 +26,12 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
                         </p>
                     </div>
                 ) : (
-                    // Items List
                     <div className="divide-y divide-gray-50">
                         {userCartItems.map((item) => (
                             <div
                                 key={item._id || Math.random()}
                                 className="flex items-center gap-4 p-4 hover:bg-gray-50/80 transition-colors group"
                             >
-                                {/* Image Placeholder */}
                                 <div className="h-12 w-12 shrink-0 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-indigo-200 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
                                     {item.image ? (
                                         <img
@@ -49,7 +44,6 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
                                     )}
                                 </div>
 
-                                {/* Product Details */}
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-sm font-medium text-gray-900 truncate group-hover:text-indigo-600 transition-colors">
                                         {item.product_name || item.name || "Product"}
@@ -62,7 +56,6 @@ export default function CartItemsModal({ userCartItems, totalPrice }) {
                                     </p>
                                 </div>
 
-                                {/* Price */}
                                 <div className="text-right">
                                     <p className="text-sm font-bold text-gray-900">
                                         ₹{(item.price || 0).toLocaleString()}

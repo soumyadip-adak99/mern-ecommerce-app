@@ -22,7 +22,6 @@ export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Get User from Redux
     const { user } = useSelector((state) => state.auth);
 
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -34,7 +33,6 @@ export default function Navbar() {
     const profileRef = useRef(null);
     const mobileMenuRef = useRef(null);
 
-    // --- 1. Handle Click Outside ---
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (cartRef.current && !cartRef.current.contains(e.target)) setIsCartOpen(false);
@@ -69,7 +67,7 @@ export default function Navbar() {
         dispatch(logoutUser());
         setIsProfileOpen(false);
         setIsMobileMenuOpen(false);
-        // window.location.reload();
+
         navigate(0);
     };
 
@@ -87,9 +85,7 @@ export default function Navbar() {
             <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm font-sans">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
-                        {/* --- LEFT SECTION: Logo & Mobile Menu Trigger --- */}
                         <div className="flex items-center gap-4">
-                            {/* Mobile Menu Button */}
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 className="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
@@ -97,7 +93,6 @@ export default function Navbar() {
                                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
 
-                            {/* Logo */}
                             <Link to="/" className="flex items-center gap-2 group">
                                 <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold shadow-md group-hover:bg-indigo-700 transition-colors">
                                     <ShoppingBag size={20} />
@@ -108,7 +103,6 @@ export default function Navbar() {
                             </Link>
                         </div>
 
-                        {/* --- RIGHT SECTION: Desktop Links & Actions --- */}
                         <div className="flex items-center gap-2 sm:gap-4">
                             <Link
                                 to="/products"
@@ -117,7 +111,6 @@ export default function Navbar() {
                                 All Products
                             </Link>
 
-                            {/* Desktop Search Bar */}
                             <div className="hidden sm:flex items-center bg-gray-200 rounded-full px-4 py-1.5 border border-transparent focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition-all w-48 lg:w-64">
                                 <Search size={18} className="text-gray-700" />
                                 <input
@@ -127,7 +120,6 @@ export default function Navbar() {
                                 />
                             </div>
 
-                            {/* Mobile Search Toggle */}
                             <button
                                 onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
                                 className="sm:hidden p-2 text-gray-600 hover:bg-gray-200 rounded-full transition-colors"
@@ -135,7 +127,6 @@ export default function Navbar() {
                                 <Search size={22} />
                             </button>
 
-                            {/* --- CART ICON --- */}
                             <div ref={cartRef} className="relative">
                                 <button
                                     onClick={() => setIsCartOpen(!isCartOpen)}
@@ -162,7 +153,6 @@ export default function Navbar() {
                             </div>
 
                             {user ? (
-                                /* LOGGED IN: SHOW PROFILE DROPDOWN */
                                 <div ref={profileRef} className="relative hidden sm:block">
                                     <button
                                         onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -240,7 +230,6 @@ export default function Navbar() {
                                     )}
                                 </div>
                             ) : (
-                                /* NOT LOGGED IN: SHOW LOGIN/REGISTER BUTTONS */
                                 <div className="hidden sm:flex items-center gap-2">
                                     <Link
                                         to="/auth/user"
@@ -260,7 +249,6 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* --- MOBILE SEARCH --- */}
                 <div
                     className={`sm:hidden overflow-hidden transition-all duration-300 ease-in-out border-b border-gray-100 bg-gray-50 ${
                         isMobileSearchOpen ? "max-h-16 opacity-100" : "max-h-0 opacity-0"
@@ -279,7 +267,6 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* --- MOBILE MENU (Dropdown/Drawer) --- */}
                 {isMobileMenuOpen && (
                     <div
                         ref={mobileMenuRef}
@@ -295,9 +282,7 @@ export default function Navbar() {
                             </Link>
 
                             <div className="border-t border-gray-100 my-2 pt-2">
-                                {/* MOBILE AUTH LOGIC */}
                                 {user ? (
-                                    /* IF LOGGED IN: Show Profile Links */
                                     <>
                                         <div className="px-4 py-2 text-xs text-gray-500 font-semibold uppercase tracking-wider">
                                             {user.first_name} {user.last_name}
