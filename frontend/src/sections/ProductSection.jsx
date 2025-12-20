@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAllProducts } from "../features/product/ProductAction";
+import { getAllProducts } from "../features/product/productAction";
 
 const getStatusBadge = (status) => {
     switch (status) {
