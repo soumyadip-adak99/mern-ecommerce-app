@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getProductById } from "../product/ProductAction";
-import { getAllProducts } from "../product/ProductAction";
+import { getProductById, getAllProducts } from "../product/productAction";
 
 const initialState = {
     product: null,
