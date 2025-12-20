@@ -16,7 +16,7 @@ import Navbar from "../sections/Navbar";
 import ProductModal from "../components/ProductModal";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getAllProducts } from "../features/product/ProductAction";
+import { getAllProducts } from "../features/product/productAction";
 import { addToCart } from "../features/cart/cartAction";
 
 export default function AllProducts() {
