@@ -31,13 +31,14 @@ export const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong on server.");
     }
 
-    let name = `${first_name} ${last_name}`;
+    // TODO: for production purpus this will be in comment out
+    // let name = `${first_name} ${last_name}`;
 
-    try {
-        await sendWelcomeEmail(email, name);
-    } catch (error) {
-        console.error("Email sending failed:", error);
-    }
+    // try {
+    //     await sendWelcomeEmail(email, name);
+    // } catch (error) {
+    //     console.error("Email sending failed:", error);
+    // }
 
     return res.status(200).json({
         message: "User registered successfully",
