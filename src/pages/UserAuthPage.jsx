@@ -99,6 +99,7 @@ function UserAuthPage() {
     }, [isSuccess, isLoginView, navigate, dispatch]);
 
     useEffect(() => {
+        dispatch(resetStatus());
         return () => {
             dispatch(resetStatus());
         };

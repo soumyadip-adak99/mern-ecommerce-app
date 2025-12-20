@@ -15,8 +15,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, getUserDetails } from "../features/appFeatures/authSlice";
 
-import CartItemsModal from "../components/CartItemsModal";
-
 export default function Navbar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -24,7 +22,6 @@ export default function Navbar() {
 
     const { user } = useSelector((state) => state.auth);
 
-    const [isCartOpen, setIsCartOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -127,29 +124,18 @@ export default function Navbar() {
                                 <Search size={22} />
                             </button>
 
-                            <div ref={cartRef} className="relative">
-                                <button
-                                    onClick={() => setIsCartOpen(!isCartOpen)}
-                                    className={`p-2 rounded-full relative transition-colors ${
-                                        isCartOpen
-                                            ? "bg-indigo-50 text-indigo-600"
-                                            : "text-gray-600 hover:bg-gray-100"
-                                    }`}
+                            <div className="relative">
+                                <Link
+                                    to="/cart"
+                                    className="group p-2 rounded-full relative transition-colors text-gray-700 hover:text-indigo-600 hover:bg-gray-100 flex items-center justify-center"
                                 >
-                                    <ShoppingCart size={26} />
+                                    <ShoppingCart size={24} />
                                     {finalCartItems.length > 0 && (
-                                        <span className="absolute top-0.5 right-0.5 h-4 w-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm ring-2 ring-white">
+                                        <span className="absolute top-1 right-1 h-4 w-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full ring-2 ring-white">
                                             {finalCartItems.length}
                                         </span>
                                     )}
-                                </button>
-
-                                {isCartOpen && (
-                                    <CartItemsModal
-                                        userCartItems={finalCartItems}
-                                        totalPrice={totalPrice}
-                                    />
-                                )}
+                                </Link>
                             </div>
 
                             {user ? (
