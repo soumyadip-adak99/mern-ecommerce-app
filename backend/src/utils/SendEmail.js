@@ -1,19 +1,14 @@
 import nodemailer from "nodemailer";
 import { welcomeMailHtmlBody } from "./mailHtmlTemplate.js";
 
-// const transporter = nodemailer.createTransport({
-//     host: process.env.SMTP_HOST,
-//     port: Number(process.env.SMTP_PORT),
-//     secure: process.env.SMTP_SECURE === "true",
-
-//     auth: {
-//         user: process.env.MAIL_ID,
-//         pass: process.env.MAIL_APP_PASSWORD,
-//     },
-// });
-
 const transporter = nodemailer.createTransport({
     service: "gmail",
+    pool: true,
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100,
+    rateLimit: 10,
+    secure: true,
     auth: {
         user: process.env.MAIL_ID,
         pass: process.env.MAIL_APP_PASSWORD,
