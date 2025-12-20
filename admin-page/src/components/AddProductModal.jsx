@@ -7,6 +7,7 @@ function AddProductModal({ isOpen, onClose }) {
     const fileInputRef = useRef(null);
 
     const { isLoading } = useSelector((state) => state.product || { isLoading: false });
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         product_name: "",
@@ -49,32 +50,40 @@ function AddProductModal({ isOpen, onClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!imageFile) {
-            alert("Please upload a product image.");
-            return;
-        }
+        try {
+            setLoading(true);
+            if (!imageFile) {
+                alert("Please upload a product image.");
+                return;
+            }
 
-        const data = new FormData();
-        data.append("product_name", formData.product_name);
-        data.append("product_description", formData.product_description);
-        data.append("price", formData.price);
-        data.append("category", formData.category);
-        data.append("status", formData.status);
-        data.append("image", imageFile);
+            const data = new FormData();
+            data.append("product_name", formData.product_name);
+            data.append("product_description", formData.product_description);
+            data.append("price", formData.price);
+            data.append("category", formData.category);
+            data.append("status", formData.status);
+            data.append("image", imageFile);
 
-        console.log("📦 Form Data Entries:");
-        for (let [key, value] of data.entries()) {
-            console.log(`${key}:`, value);
-        }
+            console.log("📦 Form Data Entries:");
+            for (let [key, value] of data.entries()) {
+                console.log(`${key}:`, value);
+            }
 
-        const result = await dispatch(addProduct(data));
+            const result = await dispatch(addProduct(data));
 
-        if (result.meta.requestStatus === "fulfilled") {
-            alert("Product added successfully!");
-            resetForm();
-            onClose();
-        } else {
-            alert(`Error: ${result.payload}`);
+            if (result.meta.requestStatus === "fulfilled") {
+                alert("Product added successfully!");
+                resetForm();
+                onClose();
+            } else {
+                alert(`Error: ${result.payload}`);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong on server");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -200,14 +209,14 @@ function AddProductModal({ isOpen, onClose }) {
                         </button>
                         <button
                             type="submit"
-                            disabled={isLoading}
+                            disabled={loading}
                             className={`px-4 py-2 text-white rounded-md transition-colors ${
-                                isLoading
+                                loading
                                     ? "bg-blue-400 cursor-not-allowed"
                                     : "bg-blue-600 hover:bg-blue-700"
                             }`}
                         >
-                            {isLoading ? "Adding..." : "Add Product"}
+                            {loading ? "Adding..." : "Add Product"}
                         </button>
                     </div>
                 </form>

@@ -198,25 +198,6 @@ export function welcomeMailHtmlBody(name) {
                     </td>
                 </tr>
 
-                <!-- Footer -->
-                <tr>
-                    <td
-                        style="
-                            background-color: #333333;
-                            color: #ffffff;
-                            padding: 30px;
-                            text-align: center;
-                            font-size: 12px;
-                        "
-                    >
-                        <p style="margin: 0 0 10px">
-                            [Company Name] &bull; 123 Street Address &bull; City, State
-                        </p>
-                        <a href="#" style="color: #ffffff; text-decoration: underline"
-                            >Unsubscribe</a
-                        >
-                    </td>
-                </tr>
             </table>
         </div>
     </body>

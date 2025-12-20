@@ -138,7 +138,7 @@ export const adminLogin = asyncHandler(async (req, res) => {
 
         const adminLogged = await User.findById(user._id).select("-password, -jwtToken");
 
-        return res.status(200).cookie("jwtToken", jwtToken, options).json({
+        return res.status(200).cookie("jwtToken", jwtToken).json({
             status: 200,
             message: "user login successfully",
             user: adminLogged,
