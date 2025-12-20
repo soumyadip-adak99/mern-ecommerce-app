@@ -25,7 +25,6 @@ export const createOrder = createAsyncThunk(
             if (!response.ok) {
                 return rejectWithValue(data.message || "Order creation failed");
             }
-
             return data;
         } catch (error) {
             return rejectWithValue(error.message || "Something went wrong");
