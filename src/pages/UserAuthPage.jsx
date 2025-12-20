@@ -36,8 +36,29 @@ function UserAuthPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // for development part it run properly but in production part that not be good
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (isLoginView) {
+    //         dispatch(
+    //             loginUser({
+    //                 email: formData.email,
+    //                 password: formData.password,
+    //             })
+    //         );
+    //     } else {
+    //         dispatch(registerUser(formData));
+    //     }
+    // };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (!formData.email || !formData.password) return;
+
+        if (!isLoginView && (!formData.first_name || !formData.last_name)) return;
+
         if (isLoginView) {
             dispatch(
                 loginUser({
@@ -51,9 +72,14 @@ function UserAuthPage() {
     };
 
     const toggleView = () => {
-        setIsLoginView(!isLoginView);
         dispatch(resetStatus());
-        setFormData({ first_name: "", last_name: "", email: "", password: "" });
+        setIsLoginView((prev) => !prev);
+        setFormData({
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: "",
+        });
     };
 
     useEffect(() => {
@@ -147,10 +173,12 @@ function UserAuthPage() {
                     {isError && (
                         <div className="p-4 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100 flex items-center gap-2 animate-in fade-in">
                             <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
-                            {"Email and Password is incorrect" ||
-                                "Action failed. Please try again."}
+                            {isLoginView
+                                ? "Email or password is incorrect"
+                                : "Registration failed. Please try again"}
                         </div>
                     )}
+
                     {isSuccess && (
                         <div className="p-4 rounded-xl bg-green-50 text-green-700 text-sm border border-green-100 flex items-center gap-2 animate-in fade-in">
                             <span className="w-1.5 h-1.5 bg-green-600 rounded-full" />
