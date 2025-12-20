@@ -14,7 +14,7 @@ import {
     AlertCircle,
     X,
 } from "lucide-react";
-import { getProductById } from "../features/product/ProductAction";
+import { getProductById } from "../features/product/productAction";
 import { createOrder } from "../features/orders/orderAction";
 import { resetOrderState } from "../features/appFeatures/orderSlice";
 import { addAddress } from "../features/appFeatures/authSlice";
